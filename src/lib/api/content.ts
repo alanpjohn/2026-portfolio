@@ -13,17 +13,28 @@ export interface ContentAPI {
 // Velite-based content engine implementation
 class VeliteContentAPI implements ContentAPI {
   getBlogPosts(): BlogPost[] {
-    return (blog as BlogPost[]).sort((a: BlogPost, b: BlogPost) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    return (blog as unknown as BlogPost[]).map((post: BlogPost) => ({
+      ...post,
+      date: new Date(post.date as string | Date)
+    })).sort((a: BlogPost, b: BlogPost) => new Date(b.date).getTime() - new Date(a.date).getTime())
   }
 
   getBlogPostBySlug(slug: string): BlogPost | undefined {
-    return (blog as BlogPost[]).find((post: BlogPost) => post.slug === slug)
+    const post = (blog as unknown as BlogPost[]).find((p: BlogPost) => p.slug === slug)
+    if (!post) return undefined
+    return {
+      ...post,
+      date: new Date(post.date as string | Date)
+    }
   }
 
   getWorkProjects(): WorkProject[] {
     const workData = work as unknown as { projects: WorkProject[] }
     const projects = workData?.projects || []
-    return projects.sort((a: WorkProject, b: WorkProject) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    return projects.map((project: WorkProject) => ({
+      ...project,
+      date: new Date(project.date as string | Date)
+    })).sort((a: WorkProject, b: WorkProject) => new Date(b.date).getTime() - new Date(a.date).getTime())
   }
 
   getFeaturedWorkProjects(): WorkProject[] {
