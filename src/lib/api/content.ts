@@ -29,8 +29,11 @@ class VeliteContentAPI implements ContentAPI {
   }
 
   getWorkProjects(): WorkProject[] {
-    const workData = work as unknown as { projects: WorkProject[] }
-    const projects = workData?.projects || []
+    const workData = work as unknown as { projects: WorkProject[] }[]
+	console.log(work)
+	console.log(workData)
+	const projects = workData[0]?.projects || []
+	console.log(projects)
     return projects.map((project: WorkProject) => ({
       ...project,
       date: new Date(project.date as string | Date)
