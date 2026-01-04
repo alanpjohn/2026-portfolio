@@ -13,16 +13,16 @@ export function getWorkProjectById(id: string): WorkProject | undefined {
   return getAllWorkProjects().find(project => project.id === id)
 }
 
-export function getWorkProjectsByTech(tech: string): WorkProject[] {
+export function getWorkProjectsByTag(tag: string): WorkProject[] {
   return getAllWorkProjects().filter(project => 
-    project.techStack.some(t => t.toLowerCase().includes(tech.toLowerCase()))
+    project.tags.some(t => t.toLowerCase().includes(tag.toLowerCase()))
   )
 }
 
-export function getAllTechnologies(): string[] {
-  const techSet = new Set<string>()
+export function getAllTags(): string[] {
+  const tagSet = new Set<string>()
   getAllWorkProjects().forEach(project => {
-    project.techStack.forEach(tech => techSet.add(tech))
+    project.tags.forEach(tag => tagSet.add(tag))
   })
-  return Array.from(techSet).sort()
+  return Array.from(tagSet).sort()
 }

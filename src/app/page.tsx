@@ -10,10 +10,10 @@ export default function Home() {
         <Container>
           <div className="flex flex-col items-center text-center">
             <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
-              Welcome to My Portfolio
+		Alan John
             </h1>
             <p className="mt-4 max-w-[700px] text-lg text-muted-foreground sm:text-xl">
-              {siteConfig.description}
+              Software Engineer
             </p>
             <div className="mt-8 flex gap-4">
               <Link
@@ -47,7 +47,7 @@ export default function Home() {
                   {siteConfig.author}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Full-stack developer passionate about building modern web applications with cutting-edge technologies.
+                  Backend Engineer specialising in AI applications and cloud computing with experience in research and early stage SaaS startups
                 </p>
               </div>
             </div>

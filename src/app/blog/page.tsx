@@ -35,12 +35,6 @@ export default async function BlogPage({
                   <time dateTime={post.date.toISOString()}>
                     {formatDate(post.date)}
                   </time>
-                  <span>•</span>
-                  <span>{post.readingTime} min read</span>
-                  <span>•</span>
-                  <span className="px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground text-xs">
-                    {post.category}
-                  </span>
                 </div>
                 <p className="text-muted-foreground mt-2">{post.excerpt}</p>
                 <div className="flex flex-wrap gap-2 mt-4">

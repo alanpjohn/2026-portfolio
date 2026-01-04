@@ -1,11 +1,11 @@
 export interface WorkProject {
+
   id: string
   title: string
   description: string
-  techStack: string[]
+  tags: string[]
   featured: boolean
-  liveUrl?: string
-  githubUrl?: string
+  url?: string
   image?: string
   date: Date
 }

@@ -8,12 +8,10 @@ export default defineConfig({
       schema: s.object({
         title: s.string().max(200),
         date: s.string().transform((date) => new Date(date)),
-        category: s.string(),
         tags: s.array(s.string()).max(10),
         excerpt: s.string().max(300),
-        readingTime: s.number().min(1),
         slug: s.path().transform(path => path.replace(/^blog\//, '').replace(/\.md$/, '')),
-        content: s.markdown()
+        content: s.markdown(),
       })
     },
     work: {
@@ -24,10 +22,9 @@ export default defineConfig({
           id: s.string(),
           title: s.string(),
           description: s.string(),
-          techStack: s.array(s.string()),
+          tags: s.array(s.string()),
           featured: s.boolean(),
-          liveUrl: s.string().optional(),
-          githubUrl: s.string().optional(),
+          url: s.string().optional(),
           image: s.string().optional(),
           date: s.string().transform((date) => new Date(date))
         }))

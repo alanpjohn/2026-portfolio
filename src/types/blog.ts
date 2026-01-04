@@ -1,10 +1,8 @@
 export interface BlogPost {
   title: string
   date: Date
-  category: string
   tags: string[]
   excerpt: string
-  readingTime: number
   slug: string
   content: string
 }

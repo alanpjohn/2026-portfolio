@@ -42,12 +42,6 @@ export default async function BlogPostPage({
             <time dateTime={post.date.toISOString()}>
               {formatDate(post.date)}
             </time>
-            <span>•</span>
-            <span>{post.readingTime} min read</span>
-            <span>•</span>
-            <span className="px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground text-xs">
-              {post.category}
-            </span>
           </div>
           <div className="flex flex-wrap gap-2">
             {post.tags.map((tag) => (

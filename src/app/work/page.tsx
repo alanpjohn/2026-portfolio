@@ -22,7 +22,7 @@ export default function WorkPage() {
               className="rounded-lg border bg-card text-card-foreground shadow-sm overflow-hidden"
             >
               {project.image && (
-                <Link href={project.liveUrl || project.githubUrl || "#"}>
+                <Link href={project.url || "#"}>
                   <CustomImage
                     src={project.image}
                     alt={project.title}
@@ -47,34 +47,24 @@ export default function WorkPage() {
                   {project.description}
                 </p>
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {project.techStack.map((tech) => (
+                  {project.tags.map((tag) => (
                     <span
-                      key={tech}
+                      key={tag}
                       className="px-2 py-1 rounded-md bg-secondary text-secondary-foreground text-xs"
                     >
-                      {tech}
+                      {tag}
                     </span>
                   ))}
                 </div>
                 <div className="flex items-center gap-4">
-                  {project.liveUrl && (
+                  {project.url && (
                     <Link
-                      href={project.liveUrl}
+                      href={project.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90"
                     >
-                      Live Demo
-                    </Link>
-                  )}
-                  {project.githubUrl && (
-                    <Link
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground"
-                    >
-                      View Code
+                      View Project
                     </Link>
                   )}
                 </div>

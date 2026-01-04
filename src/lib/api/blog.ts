@@ -10,17 +10,8 @@ export function getBlogPostBySlug(slug: string): BlogPost | undefined {
   return contentAPI.getBlogPostBySlug(slug)
 }
 
-export function getBlogPostsByCategory(category: string): BlogPost[] {
-  return getAllBlogPosts().filter(post => post.category === category)
-}
-
 export function getBlogPostsByTag(tag: string): BlogPost[] {
   return getAllBlogPosts().filter(post => post.tags.includes(tag))
-}
-
-export function getAllCategories(): string[] {
-  const categories = new Set(getAllBlogPosts().map(post => post.category))
-  return Array.from(categories)
 }
 
 export function getAllTags(): string[] {
@@ -48,15 +39,10 @@ export function getPaginatedBlogPosts(page: number = 1): PaginatedBlogPosts {
 
 // Client-side filtering functions (placeholder for future implementation)
 export function filterBlogPosts(posts: BlogPost[], filters: {
-  category?: string
   tag?: string
   search?: string
 }): BlogPost[] {
   let filtered = posts
-
-  if (filters.category) {
-    filtered = filtered.filter(post => post.category === filters.category)
-  }
 
   if (filters.tag) {
     filtered = filtered.filter(post => post.tags.includes(filters.tag!))
