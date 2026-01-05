@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Container } from "@/components/layout/Container";
 import { getPaginatedBlogPosts } from "@/lib/api/blog";
 import { formatDate } from "@/lib/utils/helpers";
 
@@ -15,9 +16,9 @@ export default async function BlogPage({
     getPaginatedBlogPosts(currentPage);
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold tracking-tighter mb-8">Blog</h1>
+    <Container className="py-12">
+      <div className="">
+        <h1 className="mb-8 text-4xl font-bold tracking-tighter">Blog</h1>
 
         <div className="grid gap-8">
           {posts.map((post) => (
@@ -27,7 +28,7 @@ export default async function BlogPage({
             >
               <div className="flex flex-col space-y-2">
                 <Link href={`/blog/${post.slug}`}>
-                  <h2 className="text-2xl font-semibold leading-tight hover:text-primary transition-colors">
+                  <h2 className="text-2xl font-semibold leading-tight transition-colors hover:text-primary">
                     {post.title}
                   </h2>
                 </Link>
@@ -36,12 +37,12 @@ export default async function BlogPage({
                     {formatDate(post.date)}
                   </time>
                 </div>
-                <p className="text-muted-foreground mt-2">{post.excerpt}</p>
-                <div className="flex flex-wrap gap-2 mt-4">
+                <p className="mt-2 text-muted-foreground">{post.excerpt}</p>
+                <div className="mt-4 flex flex-wrap gap-2">
                   {post.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="px-2 py-1 rounded-md bg-muted text-muted-foreground text-xs"
+                      className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground"
                     >
                       #{tag}
                     </span>
@@ -53,7 +54,7 @@ export default async function BlogPage({
         </div>
 
         {totalPages > 1 && (
-          <div className="flex items-center justify-center gap-4 mt-12">
+          <div className="mt-12 flex items-center justify-center gap-4">
             {hasPrev && (
               <Link
                 href={`/blog?page=${currentPage - 1}`}
@@ -76,6 +77,6 @@ export default async function BlogPage({
           </div>
         )}
       </div>
-    </div>
+    </Container>
   );
 }

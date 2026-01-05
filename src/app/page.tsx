@@ -1,21 +1,23 @@
 import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
+import { SectionContent } from "@/components/layout/SectionContent";
+import { StackedSections } from "@/components/home/StackedSections";
 import { siteConfig } from "@/data/config";
 
 export default function Home() {
   return (
-    <div className="flex flex-col">
-      <Section>
-        <Container>
-          <div className="flex flex-col items-center text-center">
+    <StackedSections>
+      <Section key="hero" id="hero" fullHeight>
+        <Container fullWidth>
+          <SectionContent className="flex flex-col items-center text-center">
             <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
-		Alan John
+              Alan John
             </h1>
             <p className="mt-4 max-w-[700px] text-lg text-muted-foreground sm:text-xl">
               Software Engineer
             </p>
-            <div className="mt-8 flex gap-4">
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
               <Link
                 href="/blog"
                 className="inline-flex items-center justify-center rounded-md bg-primary px-8 py-3 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
@@ -29,61 +31,63 @@ export default function Home() {
                 See Work
               </Link>
             </div>
-          </div>
+          </SectionContent>
         </Container>
       </Section>
 
-      <Section>
-        <Container>
-          <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
-              <div className="flex flex-col space-y-1.5">
-                <h3 className="text-2xl font-semibold leading-none tracking-tight">
-                  About Me
-                </h3>
+      <Section key="about" id="about" fullHeight>
+        <Container fullWidth>
+          <SectionContent>
+            <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
+                <div className="flex flex-col space-y-1.5">
+                  <h3 className="text-2xl font-semibold leading-none tracking-tight">
+                    About Me
+                  </h3>
+                </div>
+                <div className="mt-4 space-y-2">
+                  <p className="text-sm text-muted-foreground">
+                    {siteConfig.author}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Backend Engineer specialising in AI applications and cloud computing with experience in research and early stage SaaS startups
+                  </p>
+                </div>
               </div>
-              <div className="mt-4 space-y-2">
-                <p className="text-sm text-muted-foreground">
-                  {siteConfig.author}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Backend Engineer specialising in AI applications and cloud computing with experience in research and early stage SaaS startups
-                </p>
-              </div>
-            </div>
 
-            <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
-              <div className="flex flex-col space-y-1.5">
-                <h3 className="text-2xl font-semibold leading-none tracking-tight">
-                  Latest Projects
-                </h3>
+              <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
+                <div className="flex flex-col space-y-1.5">
+                  <h3 className="text-2xl font-semibold leading-none tracking-tight">
+                    Latest Projects
+                  </h3>
+                </div>
+                <div className="mt-4 space-y-2">
+                  <p className="text-sm text-muted-foreground">
+                    Explore my featured work showcasing various technologies and solutions.
+                  </p>
+                </div>
               </div>
-              <div className="mt-4 space-y-2">
-                <p className="text-sm text-muted-foreground">
-                  Explore my featured work showcasing various technologies and solutions.
-                </p>
-              </div>
-            </div>
 
-            <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
-              <div className="flex flex-col space-y-1.5">
-                <h3 className="text-2xl font-semibold leading-none tracking-tight">
-                  Blog Posts
-                </h3>
-              </div>
-              <div className="mt-4 space-y-2">
-                <p className="text-sm text-muted-foreground">
-                  Read articles about development, tutorials, and technical insights.
-                </p>
+              <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
+                <div className="flex flex-col space-y-1.5">
+                  <h3 className="text-2xl font-semibold leading-none tracking-tight">
+                    Blog Posts
+                  </h3>
+                </div>
+                <div className="mt-4 space-y-2">
+                  <p className="text-sm text-muted-foreground">
+                    Read articles about development, tutorials, and technical insights.
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          </SectionContent>
         </Container>
       </Section>
 
-      <Section>
-        <Container>
-          <div className="flex flex-col items-center text-center">
+      <Section key="collaborate" id="collaborate" fullHeight>
+        <Container fullWidth>
+          <SectionContent className="flex flex-col items-center text-center">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
               Let&apos;s Work Together
             </h2>
@@ -98,13 +102,13 @@ export default function Home() {
                 Get in Touch
               </Link>
             </div>
-          </div>
+          </SectionContent>
         </Container>
       </Section>
 
-      <Section>
-        <Container>
-          <div className="flex flex-col items-center text-center">
+      <Section key="contact" id="contact" fullHeight>
+        <Container fullWidth>
+          <SectionContent className="flex flex-col items-center text-center">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
               Contact Me
             </h2>
@@ -114,7 +118,7 @@ export default function Home() {
             <div className="mt-8 flex flex-col gap-4">
               <a
                 href={`mailto:${siteConfig.email}`}
-                className="text-lg text-foreground hover:text-primary transition-colors"
+                className="text-lg text-foreground transition-colors hover:text-primary"
               >
                 {siteConfig.email}
               </a>
@@ -123,7 +127,7 @@ export default function Home() {
                   href="https://github.com/username"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   GitHub
                 </a>
@@ -131,15 +135,15 @@ export default function Home() {
                   href="https://linkedin.com/in/username"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 >
                   LinkedIn
                 </a>
               </div>
             </div>
-          </div>
+          </SectionContent>
         </Container>
       </Section>
-    </div>
+    </StackedSections>
   );
 }

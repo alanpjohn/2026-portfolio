@@ -1,4 +1,6 @@
 import { defineConfig, s } from 'velite'
+import rehypeHighlight from 'rehype-highlight'
+import rehypeHighlightCodeLines from 'rehype-highlight-code-lines'
 
 export default defineConfig({
   collections: {
@@ -11,7 +13,14 @@ export default defineConfig({
         tags: s.array(s.string()).max(10),
         excerpt: s.string().max(300),
         slug: s.path().transform(path => path.replace(/^blog\//, '').replace(/\.md$/, '')),
-        content: s.markdown(),
+        content: s.markdown({
+          rehypePlugins: [
+            [rehypeHighlight, {
+              detect: true,
+              ignoreMissing: true
+            }]
+          ]
+        }),
       })
     },
     work: {

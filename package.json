@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.14.7",
+    "framer-motion": "^12.24.0",
     "gray-matter": "^4.0.3",
     "js-yaml": "^4.1.1",
     "next": "15.5.9",
@@ -22,6 +23,7 @@
     "react": "19.1.4",
     "react-dom": "19.1.4",
     "rehype-highlight": "^7.0.2",
+    "rehype-highlight-code-lines": "^1.2.1",
     "rehype-stringify": "^10.0.1",
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",
