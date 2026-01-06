@@ -24,18 +24,22 @@ export default defineConfig({
       })
     },
     work: {
-      name: 'WorkProject',
+      name: 'WorkContent',
       pattern: 'work.yaml',
       schema: s.object({
-        projects: s.array(s.object({
+        items: s.array(s.object({
           id: s.string(),
           title: s.string(),
+          type: s.enum(['project', 'experience']),
           description: s.string(),
           tags: s.array(s.string()),
           featured: s.boolean(),
           url: s.string().optional(),
           image: s.string().optional(),
-          date: s.string().transform((date) => new Date(date))
+          date: s.string().transform((date) => new Date(date)),
+          endDate: s.string().optional().transform((date) => date ? new Date(date) : undefined),
+          company: s.string().optional(),
+          role: s.string().optional()
         }))
       })
     }

@@ -1,13 +1,15 @@
 import { blog, work } from 'velite-content'
 import type { BlogPost } from '@/types/blog'
-import type { WorkProject } from '@/types/work'
+import type { WorkItem } from '@/types/work'
 
 // Content interfaces for future CMS integration
 export interface ContentAPI {
     getBlogPosts(): BlogPost[]
     getBlogPostBySlug(slug: string): BlogPost | undefined
-    getWorkProjects(): WorkProject[]
-    getFeaturedWorkProjects(): WorkProject[]
+    getWorkItems(): WorkItem[]
+    getWorkProjects(): WorkItem[]
+    getWorkExperiences(): WorkItem[]
+    getFeaturedWorkItems(): WorkItem[]
 }
 
 // Velite-based content engine implementation
@@ -28,17 +30,33 @@ class VeliteContentAPI implements ContentAPI {
         }
     }
 
-    getWorkProjects(): WorkProject[] {
-        const workData = work as unknown as { projects: WorkProject[] }[]
-        const projects = workData[0]?.projects || []
-        return projects.map((project: WorkProject) => ({
-            ...project,
-            date: new Date(project.date as string | Date)
-        })).sort((a: WorkProject, b: WorkProject) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    getWorkItems(): WorkItem[] {
+        const workData = work as unknown as { items: WorkItem[] }[]
+        const items = workData[0]?.items || []
+        return items.map((item: WorkItem) => ({
+            ...item,
+            date: new Date(item.date as string | Date),
+            endDate: item.endDate ? new Date(item.endDate as string | Date) : null
+        })).sort((a: WorkItem, b: WorkItem) => {
+            // Sort by type first: experiences before projects
+            if (a.type !== b.type) {
+                return a.type === 'experience' ? -1 : 1
+            }
+            // Within same type, sort by date (newest first)
+            return new Date(b.date).getTime() - new Date(a.date).getTime()
+        })
     }
 
-    getFeaturedWorkProjects(): WorkProject[] {
-        return this.getWorkProjects().filter(project => project.featured)
+    getWorkProjects(): WorkItem[] {
+        return this.getWorkItems().filter(item => item.type === 'project')
+    }
+
+    getWorkExperiences(): WorkItem[] {
+        return this.getWorkItems().filter(item => item.type === 'experience')
+    }
+
+    getFeaturedWorkItems(): WorkItem[] {
+        return this.getWorkItems().filter(item => item.featured)
     }
 }
 
