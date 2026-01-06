@@ -1,6 +1,11 @@
+'use client'
+
+import { useRef } from 'react'
+import { motion } from 'framer-motion'
 import Link from "next/link"
 import { formatDate } from '@/lib/utils/helpers'
 import { CustomImage } from '@/components/ui/Image'
+import { useCellAnimation, cellVariants } from './WorkCard.animations'
 import type { WorkItem } from '@/types/work'
 
 interface WorkCardProps {
@@ -8,72 +13,89 @@ interface WorkCardProps {
 }
 
 export function WorkCard({ item }: WorkCardProps) {
+  const ref = useRef<HTMLDivElement>(null)
+  const { isInView, shouldReduceMotion } = useCellAnimation(ref as React.RefObject<HTMLElement>)
+
+  const title = item.type === 'experience' ? `${item.role} at ${item.company}` : item.title
+
+  const dateString = item.type === 'experience'
+    ? `${formatDate(item.date)} - ${item.endDate ? formatDate(item.endDate) : 'Present'}`
+    : formatDate(item.date)
+
   return (
-    <div className="space-y-8">
-      {item.image && (
-        <div className="flex justify-center">
-          {item.type === 'project' && item.url ? (
-            <Link href={item.url} target="_blank" rel="noopener noreferrer">
+    <div ref={ref} className="space-y-2">
+      <div className="text-xs text-muted-foreground uppercase tracking-wider">
+        {item.type}
+      </div>
+
+      <div className={`grid gap-4 ${item.image ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1 md:grid-cols-2'}`}>
+        <motion.div
+          variants={cellVariants}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          transition={{ duration: shouldReduceMotion ? 0 : 0.3, delay: shouldReduceMotion ? 0 : 0 }}
+          className="flex flex-col justify-between"
+        >
+          <div>
+            <h3 className="text-4xl md:text-5xl font-black">{title}</h3>
+            <time dateTime={item.date.toISOString()} className="text-sm text-muted-foreground">
+              {dateString}
+            </time>
+          </div>
+          {item.type === 'project' && item.url && (
+            <a href={item.url} target="_blank" rel="noopener noreferrer"
+               className="inline-flex items-center justify-center rounded-none bg-primary px-6 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 uppercase self-start">
+              View Project
+            </a>
+          )}
+        </motion.div>
+
+        {item.image && (
+          <motion.div
+            variants={cellVariants}
+            initial="hidden"
+            animate={isInView ? "visible" : "hidden"}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.3, delay: shouldReduceMotion ? 0 : 0.1 }}
+            className="flex justify-center"
+          >
+            {item.type === 'project' && item.url ? (
+              <Link href={item.url} target="_blank" rel="noopener noreferrer">
+                <CustomImage
+                  src={item.image}
+                  alt={title}
+                  width={600}
+                  height={400}
+                  className="rounded-none shadow-lg hover:shadow-xl transition-shadow duration-300"
+                />
+              </Link>
+            ) : (
               <CustomImage
                 src={item.image}
-                alt={item.title}
+                alt={title}
                 width={600}
                 height={400}
-                className="rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
+                className="rounded-none shadow-lg"
               />
-            </Link>
-          ) : (
-            <CustomImage
-              src={item.image}
-              alt={item.title}
-              width={600}
-              height={400}
-              className="rounded-lg shadow-lg"
-            />
-          )}
-        </div>
-      )}
-
-      <div className="text-center">
-        <div className="inline-block pb-2 border-b-2 border-primary mb-6">
-          <span className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
-            {item.type}
-          </span>
-        </div>
-      </div>
-
-      <div className="text-center space-y-4">
-        <h3 className="text-2xl font-bold">{item.title}</h3>
-        {item.type === 'experience' && item.company && (
-          <p className="text-lg text-muted-foreground">{item.role} at {item.company}</p>
+            )}
+          </motion.div>
         )}
-        <p className="text-muted-foreground max-w-2xl mx-auto">{item.description}</p>
-      </div>
 
-      <div className="flex flex-wrap gap-2 justify-center">
-        {item.tags.map((tag) => (
-          <span key={tag} className="rounded-md bg-secondary px-3 py-1 text-sm text-secondary-foreground">
-            {tag}
-          </span>
-        ))}
-      </div>
-
-      {item.type === 'project' && item.url && (
-        <div className="text-center">
-          <a href={item.url} target="_blank" rel="noopener noreferrer"
-             className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90">
-            View Project
-          </a>
-        </div>
-      )}
-
-      <div className="text-center text-sm text-muted-foreground">
-        <time dateTime={item.date.toISOString()}>
-          {item.type === 'experience'
-            ? `${formatDate(item.date)} - ${item.endDate ? formatDate(item.endDate) : 'Present'}`
-            : formatDate(item.date)
-          }
-        </time>
+        <motion.div
+          variants={cellVariants}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          transition={{ duration: shouldReduceMotion ? 0 : 0.3, delay: shouldReduceMotion ? 0 : (item.image ? 0.2 : 0.1) }}
+          className=""
+        >
+          <p className="text-muted-foreground mb-4">{item.description}</p>
+          <div className="flex flex-wrap gap-2">
+            {item.tags.map((tag) => (
+              <span key={tag} className="border border-current px-2 py-1 text-xs uppercase tracking-wider">
+                {tag}
+              </span>
+            ))}
+          </div>
+        </motion.div>
       </div>
     </div>
   )
