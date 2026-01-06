@@ -1,49 +1,52 @@
-'use client'
+"use client";
 
-import { Children, isValidElement, type ReactNode, useRef } from 'react'
+import { Children, isValidElement, type ReactNode, useRef } from "react";
 import {
   motion,
   useScroll,
   useTransform,
   AnimatePresence,
   useReducedMotion,
-  type Variants
-} from 'framer-motion'
-import { useActiveSection } from '@/hooks/useActiveSection'
-import { defaultAnimationConfig, reducedMotionConfig } from './animation-config'
+  type Variants,
+} from "framer-motion";
+import { useActiveSection } from "@/hooks/useActiveSection";
+import {
+  defaultAnimationConfig,
+  reducedMotionConfig,
+} from "./animation-config";
 
 interface StackedSectionsProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 export function StackedSections({ children }: StackedSectionsProps) {
-  const prefersReducedMotion = useReducedMotion()
-  const config = prefersReducedMotion ? reducedMotionConfig : defaultAnimationConfig
+  const prefersReducedMotion = useReducedMotion();
+  const config = prefersReducedMotion
+    ? reducedMotionConfig
+    : defaultAnimationConfig;
 
   const sections = Children.toArray(children).filter((child) => {
-    if (typeof child === 'string') {
-      return child.trim().length > 0
+    if (typeof child === "string") {
+      return child.trim().length > 0;
     }
-    return child !== null && child !== undefined
-  })
+    return child !== null && child !== undefined;
+  });
 
-  const containerRef = useRef<HTMLDivElement>(null)
   const { activeIndex, setRef } = useActiveSection(sections.length, {
-    threshold: 0.6,
-  })
-
-  const stackHeight = `${Math.max(sections.length, 1) * 100}vh`
+    threshold: 0.5,
+    rootMargin: "-20% 0px -20% 0px",
+  });
 
   return (
-    <div
-      ref={containerRef}
-      className="relative snap-y snap-mandatory overflow-y-auto"
-      style={{ height: stackHeight }}
-    >
+    <div className="relative -mt-24">
       <AnimatePresence initial={false} mode="sync">
         {sections.map((child, index) => (
           <StackedSection
-            key={isValidElement(child) && child.key !== null ? child.key : `section-${index}`}
+            key={
+              isValidElement(child) && child.key !== null
+                ? child.key
+                : `section-${index}`
+            }
             index={index}
             total={sections.length}
             activeIndex={activeIndex}
@@ -55,16 +58,16 @@ export function StackedSections({ children }: StackedSectionsProps) {
         ))}
       </AnimatePresence>
     </div>
-  )
+  );
 }
 
 interface StackedSectionProps {
-  children: ReactNode
-  index: number
-  total: number
-  activeIndex: number
-  setRef: (index: number) => (el: HTMLDivElement | null) => void
-  config: typeof defaultAnimationConfig
+  children: ReactNode;
+  index: number;
+  total: number;
+  activeIndex: number;
+  setRef: (index: number) => (el: HTMLDivElement | null) => void;
+  config: typeof defaultAnimationConfig;
 }
 
 function StackedSection({
@@ -73,90 +76,80 @@ function StackedSection({
   total,
   activeIndex,
   setRef,
-  config
+  config,
 }: StackedSectionProps) {
-  const ref = useRef<HTMLDivElement>(null)
+  const ref = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ['start end', 'end start'],
-  })
+    offset: ["start end", "end start"],
+  });
 
-  const isActive = index === activeIndex
-  const isAbove = index < activeIndex
-  const stackPosition = activeIndex - index
+  const isActive = index === activeIndex;
+  const stackPosition = activeIndex - index;
 
+  // Z-axis movement: move sections into negative Z space as they recede
+  const z = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [0, config.zOffset * Math.abs(stackPosition)],
+  );
+
+  // Scale reduction as sections move back in Z space
   const scale = useTransform(
     scrollYProgress,
-    [0, 0.5, 1],
-    [config.stackedScale, config.activeScale, config.stackedScale]
-  )
-
-  const opacity = useTransform(
-    scrollYProgress,
-    [0, 0.3, 0.7, 1],
-    [config.stackedOpacity, config.activeOpacity, config.activeOpacity, config.stackedOpacity]
-  )
-
-  const y = useTransform(
-    scrollYProgress,
-    [0, 0.5, 1],
-    [
-      config.stackedOffsetY + (stackPosition * config.stackedOffsetYIncrement),
-      0,
-      config.stackedOffsetY
-    ]
-  )
-
-  const blur = isAbove ? config.stackedBlur * Math.min(stackPosition, 3) : 0
+    [0, 1],
+    [config.activeScale, config.stackedScale - config.zScaleReduction],
+  );
 
   const variants: Variants = {
     initial: {
       y: config.entranceY,
-      opacity: config.entranceOpacity,
     },
     animate: {
       y: 0,
-      opacity: 1,
       transition: {
         duration: config.transitionDuration,
+        type: "spring",
+        stiffness: config.springStiffness,
+        damping: config.springDamping,
       },
     },
     exit: {
-      y: config.stackedOffsetY,
-      opacity: config.stackedOpacity,
+      z: config.zOffset,
       scale: config.stackedScale,
       transition: {
         duration: config.transitionDuration,
+        type: "spring",
+        stiffness: config.springStiffness,
+        damping: config.springDamping,
       },
     },
-  }
+  };
 
   return (
     <motion.div
       ref={(el: HTMLDivElement | null) => {
-        (ref as React.MutableRefObject<HTMLDivElement | null>).current = el
-        setRef(index)(el)
+        (ref as React.MutableRefObject<HTMLDivElement | null>).current = el;
+        setRef(index)(el);
       }}
-      className="sticky top-0 flex min-h-screen items-center snap-start overflow-hidden"
+      className="sticky top-0 flex h-screen items-center overflow-hidden bg-background"
       style={{
-        zIndex: total - index,
+        zIndex: index,
         scale,
-        y,
-        filter: blur > 0 ? `blur(${blur}px)` : 'none',
+        z,
         boxShadow: isActive ? config.activeShadow : config.stackedShadow,
-        willChange: 'transform, opacity, filter',
-        opacity: isActive ? undefined : opacity,
+        willChange: "transform, opacity",
+        borderRadius: config.borderRadius,
+        overflow: "hidden",
       }}
       variants={variants}
       initial="initial"
-      animate={isActive ? 'animate' : undefined}
+      animate={isActive ? "animate" : undefined}
       role="region"
       aria-label={`Section ${index + 1} of ${total}`}
     >
-      <div className="w-full bg-background">
-        {children}
-      </div>
+      <div className={`relative w-full`}>{children}</div>
     </motion.div>
-  )
+  );
 }

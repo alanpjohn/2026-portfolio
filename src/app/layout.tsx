@@ -42,9 +42,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <HighlightThemeProvider />
-          <div className="relative flex min-h-screen flex-col">
+          <div className="relative min-h-screen bg-background">
             <Header />
-            <main className="flex-1">{children}</main>
+            <main className="pt-24">{children}</main>
             <Footer />
           </div>
         </ThemeProvider>

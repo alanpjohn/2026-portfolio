@@ -25,19 +25,37 @@ export function useActiveSection(
 
   useEffect(() => {
     const observers: IntersectionObserver[] = []
-    
+
     sectionRefs.current.forEach((section, index) => {
       if (!section) return
 
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
-            if (entry.isIntersecting) {
+            if (entry.isIntersecting && entry.intersectionRatio >= threshold) {
               setActiveIndex(index)
+            } else if (!entry.isIntersecting && activeIndex === index) {
+              // Current section is exiting, find new active section
+              const intersectingSections = sectionRefs.current
+                .map((ref, i) => ({ ref, index: i }))
+                .filter(({ ref }) => ref && observer.root?.contains(ref))
+                .filter(({ ref }) => {
+                  const rect = ref!.getBoundingClientRect()
+                  return rect.top <= window.innerHeight * 0.5 && rect.bottom >= window.innerHeight * 0.5
+                })
+                .sort((a, b) => {
+                  const aRect = a.ref!.getBoundingClientRect()
+                  const bRect = b.ref!.getBoundingClientRect()
+                  return Math.abs(aRect.top) - Math.abs(bRect.top)
+                })
+
+              if (intersectingSections.length > 0) {
+                setActiveIndex(intersectingSections[0].index)
+              }
             }
           })
         },
-        { threshold, rootMargin }
+        { threshold, rootMargin, root: null }
       )
 
       observer.observe(section)
@@ -47,7 +65,7 @@ export function useActiveSection(
     return () => {
       observers.forEach((observer) => observer.disconnect())
     }
-  }, [sectionCount, threshold, rootMargin])
+  }, [sectionCount, threshold, rootMargin, activeIndex])
 
   return { activeIndex, sectionRefs, setRef }
 }

@@ -1,36 +1,23 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { SectionContent } from "@/components/layout/SectionContent";
 import { StackedSections } from "@/components/home/StackedSections";
-import { siteConfig } from "@/data/config";
+import { siteConfig, socialLinks } from "@/data/config";
 
 export default function Home() {
   return (
     <StackedSections>
       <Section key="hero" id="hero" fullHeight>
         <Container fullWidth>
-          <SectionContent className="flex flex-col items-center text-center">
-            <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl">
-              Alan John
+          <SectionContent className="flex flex-col items-center justify-center text-center">
+            <h1 className="text-8xl font-black tracking-tighter sm:text-9xl md:text-[12rem] lg:text-[14rem] leading-none">
+              ALAN JOHN
             </h1>
-            <p className="mt-4 max-w-[700px] text-lg text-muted-foreground sm:text-xl">
-              Software Engineer
+            <p className="mt-8 text-2xl font-medium text-muted-foreground sm:text-3xl md:text-4xl">
+              SOFTWARE ENGINEER
             </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-4">
-              <Link
-                href="/blog"
-                className="inline-flex items-center justify-center rounded-md bg-primary px-8 py-3 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-              >
-                View Blog
-              </Link>
-              <Link
-                href="/work"
-                className="inline-flex items-center justify-center rounded-md border border-input bg-background px-8 py-3 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-              >
-                See Work
-              </Link>
-            </div>
           </SectionContent>
         </Container>
       </Section>
@@ -38,68 +25,55 @@ export default function Home() {
       <Section key="about" id="about" fullHeight>
         <Container fullWidth>
           <SectionContent>
-            <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
-                <div className="flex flex-col space-y-1.5">
-                  <h3 className="text-2xl font-semibold leading-none tracking-tight">
-                    About Me
-                  </h3>
-                </div>
-                <div className="mt-4 space-y-2">
-                  <p className="text-sm text-muted-foreground">
-                    {siteConfig.author}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    Backend Engineer specialising in AI applications and cloud computing with experience in research and early stage SaaS startups
-                  </p>
-                </div>
+            <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
+              <div className="flex-1 space-y-6">
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">
+                  About Me
+                </h2>
+                <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
+                  Backend Engineer specialising in AI applications and cloud
+                  computing with experience in research and early stage SaaS
+                  startups. Passionate about building scalable solutions that
+                  make a real impact.
+                </p>
               </div>
-
-              <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
-                <div className="flex flex-col space-y-1.5">
-                  <h3 className="text-2xl font-semibold leading-none tracking-tight">
-                    Latest Projects
-                  </h3>
-                </div>
-                <div className="mt-4 space-y-2">
-                  <p className="text-sm text-muted-foreground">
-                    Explore my featured work showcasing various technologies and solutions.
-                  </p>
-                </div>
-              </div>
-
-              <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
-                <div className="flex flex-col space-y-1.5">
-                  <h3 className="text-2xl font-semibold leading-none tracking-tight">
-                    Blog Posts
-                  </h3>
-                </div>
-                <div className="mt-4 space-y-2">
-                  <p className="text-sm text-muted-foreground">
-                    Read articles about development, tutorials, and technical insights.
-                  </p>
-                </div>
+              <div className="flex-shrink-0">
+                <Image
+                  src="/images/Alan.jpg"
+                  alt="Alan John"
+                  width={320}
+                  height={320}
+                  className="w-64 h-64 md:w-80 md:h-80 object-cover rounded-lg shadow-lg"
+                />
               </div>
             </div>
           </SectionContent>
         </Container>
       </Section>
 
-      <Section key="collaborate" id="collaborate" fullHeight>
+      <Section key="navigation" id="navigation" fullHeight>
         <Container fullWidth>
-          <SectionContent className="flex flex-col items-center text-center">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              Let&apos;s Work Together
-            </h2>
-            <p className="mt-4 max-w-[600px] text-lg text-muted-foreground">
-              Have a project in mind? I&apos;d love to hear from you.
-            </p>
-            <div className="mt-8">
+          <SectionContent className="flex flex-col items-center justify-center text-center">
+            <div className="flex flex-col gap-8 md:gap-12">
               <Link
-                href={`mailto:${siteConfig.email}`}
-                className="inline-flex items-center justify-center rounded-md bg-primary px-8 py-3 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                href="/work"
+                className="text-4xl md:text-6xl font-black tracking-tighter hover:text-primary transition-colors"
               >
-                Get in Touch
+                WORK
+              </Link>
+              <Link
+                href="/blog"
+                className="text-4xl md:text-6xl font-black tracking-tighter hover:text-primary transition-colors"
+              >
+                BLOG
+              </Link>
+              <Link
+                href="https://photos.alanjohn.dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-4xl md:text-6xl font-black tracking-tighter hover:text-primary transition-colors"
+              >
+                PHOTOS
               </Link>
             </div>
           </SectionContent>
@@ -108,38 +82,41 @@ export default function Home() {
 
       <Section key="contact" id="contact" fullHeight>
         <Container fullWidth>
-          <SectionContent className="flex flex-col items-center text-center">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-              Contact Me
+          <SectionContent className="flex flex-col items-center justify-center text-center">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-12">
+              Contact
             </h2>
-            <p className="mt-4 max-w-[600px] text-lg text-muted-foreground">
-              Feel free to reach out via email or connect on social media.
-            </p>
-            <div className="mt-8 flex flex-col gap-4">
+            <div className="flex gap-8 md:gap-12">
+              <a
+                href={socialLinks[0].url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-4xl md:text-6xl font-black tracking-tighter hover:text-primary transition-colors"
+              >
+                G
+              </a>
+              <a
+                href={socialLinks[1].url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-4xl md:text-6xl font-black tracking-tighter hover:text-primary transition-colors"
+              >
+                L
+              </a>
+              <a
+                href={socialLinks[2].url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-4xl md:text-6xl font-black tracking-tighter hover:text-primary transition-colors"
+              >
+                D
+              </a>
               <a
                 href={`mailto:${siteConfig.email}`}
-                className="text-lg text-foreground transition-colors hover:text-primary"
+                className="text-4xl md:text-6xl font-black tracking-tighter hover:text-primary transition-colors"
               >
-                {siteConfig.email}
+                E
               </a>
-              <div className="flex gap-4">
-                <a
-                  href="https://github.com/username"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  GitHub
-                </a>
-                <a
-                  href="https://linkedin.com/in/username"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  LinkedIn
-                </a>
-              </div>
             </div>
           </SectionContent>
         </Container>
