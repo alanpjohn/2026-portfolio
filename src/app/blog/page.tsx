@@ -3,8 +3,6 @@ import { Container } from "@/components/layout/Container";
 import { getPaginatedBlogPosts } from "@/lib/api/blog";
 import { formatDate } from "@/lib/utils/helpers";
 
-export const revalidate = 86400;
-
 export default async function BlogPage({
   searchParams,
 }: {
@@ -18,7 +16,7 @@ export default async function BlogPage({
   return (
     <Container className="py-12">
       <div className="">
-        <h1 className="mb-8 text-4xl font-bold tracking-tighter">Blog</h1>
+        <h1 className="mb-8 text-4xl font-semibold tracking-tighter">Blog</h1>
 
         <div className="grid gap-8">
           {posts.map((post) => (
@@ -28,7 +26,7 @@ export default async function BlogPage({
             >
               <div className="flex flex-col space-y-2">
                 <Link href={`/blog/${post.slug}`}>
-                  <h2 className="text-2xl font-semibold leading-tight transition-colors hover:text-primary">
+                  <h2 className="text-2xl font-medium leading-tight transition-colors hover:text-primary">
                     {post.title}
                   </h2>
                 </Link>

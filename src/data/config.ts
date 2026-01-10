@@ -30,8 +30,5 @@ export const siteConfig = {
     pagination: {
         postsPerPage: 10,
         maxVisiblePages: 5
-    },
-    isr: {
-        revalidateTime: 86400 // 1 day in seconds
     }
 }

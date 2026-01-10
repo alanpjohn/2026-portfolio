@@ -2,6 +2,8 @@
 
 import { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { motion, easeOut, easeIn, useReducedMotion, AnimatePresence } from 'framer-motion'
 import { ThemeToggle } from '@/lib/theme/toggle'
 import { navigationLinks } from '@/data/config'
@@ -98,11 +100,8 @@ export function Header() {
 
   return (
     <header className="fixed top-4 left-4 right-4 z-40 mx-4 rounded-lg border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 max-w-screen-2xl items-center justify-between">
+      <div className="container flex h-16 max-w-screen-2xl items-center justify-between px-4 md:px-6">
         <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center space-x-2">
-            <span className="font-bold">Portfolio</span>
-          </Link>
           <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
             {navigationLinks.map((link) => (
               <Link
@@ -118,21 +117,13 @@ export function Header() {
         <div className="flex items-center gap-3">
           <button
             type="button"
-            className="relative flex h-10 w-10 flex-col items-center justify-center gap-1.5 rounded-md border border-input bg-background text-foreground transition-colors hover:bg-accent hover:text-accent-foreground md:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-md border border-input bg-background text-foreground transition-colors hover:bg-accent hover:text-accent-foreground md:hidden"
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
             aria-controls={MOBILE_MENU_ID}
             onClick={toggleMenu}
           >
-            <span
-              className={`h-0.5 w-5 origin-center rounded-full bg-current transition-transform duration-200 ${menuOpen ? 'translate-y-1.5 rotate-45' : ''}`}
-            />
-            <span
-              className={`h-0.5 w-5 rounded-full bg-current transition-opacity duration-200 ${menuOpen ? 'opacity-0' : 'opacity-100'}`}
-            />
-            <span
-              className={`h-0.5 w-5 origin-center rounded-full bg-current transition-transform duration-200 ${menuOpen ? '-translate-y-1.5 -rotate-45' : ''}`}
-            />
+            <FontAwesomeIcon icon={menuOpen ? faTimes : faBars} className="text-lg" />
           </button>
           <ThemeToggle />
         </div>
@@ -160,7 +151,7 @@ export function Header() {
                   >
                     <Link
                       href={link.href}
-                      className="block text-base font-medium text-foreground transition-colors hover:text-primary"
+                      className="block px-4 py-2 text-base font-medium text-foreground transition-colors hover:text-primary"
                       onClick={() => setMenuOpen(false)}
                     >
                       {link.name}

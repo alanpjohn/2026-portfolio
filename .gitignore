@@ -52,3 +52,5 @@ next-env.d.ts
 !.dev.vars.example
 
 .velite/
+content/
+# Content will be retrieved from R2 instead of being tracked by Git

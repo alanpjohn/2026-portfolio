@@ -10,6 +10,7 @@ interface CustomImageProps {
   height?: number
   className?: string
   priority?: boolean
+  blurDataURL?: string
 }
 
 export function CustomImage({
@@ -18,9 +19,10 @@ export function CustomImage({
   width = 800,
   height = 600,
   className = '',
-  priority = false
+  priority = false,
+  blurDataURL
 }: CustomImageProps) {
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(!blurDataURL)
   const [hasError, setHasError] = useState(false)
 
   if (hasError) {
@@ -48,10 +50,12 @@ export function CustomImage({
         width={width}
         height={height}
         priority={priority}
+        placeholder={blurDataURL ? 'blur' : undefined}
+        blurDataURL={blurDataURL}
         className={`transition-opacity duration-300 ${
           isLoading ? 'opacity-0' : 'opacity-100'
         }`}
-        onLoad={() => setIsLoading(false)}
+        onLoad={blurDataURL ? undefined : () => setIsLoading(false)}
         onError={() => {
           setIsLoading(false)
           setHasError(true)

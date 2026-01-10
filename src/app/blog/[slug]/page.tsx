@@ -3,9 +3,7 @@ import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { getBlogPostBySlug, getAllBlogPosts } from "@/lib/api/blog";
 import { formatDate } from "@/lib/utils/helpers";
-import { processMarkdown } from "@/lib/content/rehype";
-
-export const revalidate = 86400;
+import { BlogPostContent } from "./BlogPostContent";
 
 export async function generateStaticParams() {
     const posts = getAllBlogPosts();
@@ -26,7 +24,6 @@ export default async function BlogPostPage({
         notFound();
     }
 
-    const rendered = await processMarkdown(post.content);
     return (
         <article>
             <Container className="py-12">
@@ -39,7 +36,7 @@ export default async function BlogPostPage({
                     </Link>
 
                     <div className="mb-8 space-y-4">
-                        <h1 className="text-4xl font-bold tracking-tighter">
+                        <h1 className="text-4xl font-medium tracking-tighter">
                             {post.title}
                         </h1>
                         <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
@@ -59,9 +56,7 @@ export default async function BlogPostPage({
                         </div>
                     </div>
 
-                    <div className="prose prose-gray max-w-none dark:prose-invert">
-                        <div dangerouslySetInnerHTML={{ __html: rendered }} />
-                    </div>
+                    <BlogPostContent content={post.content} />
                 </div>
             </Container>
         </article>

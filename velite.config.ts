@@ -1,6 +1,7 @@
 import { defineConfig, s } from 'velite'
 import rehypeHighlight from 'rehype-highlight'
 import rehypeHighlightCodeLines from 'rehype-highlight-code-lines'
+import { rehypeImageOptimization } from './src/lib/content/rehype-images'
 
 export default defineConfig({
   collections: {
@@ -18,7 +19,8 @@ export default defineConfig({
             [rehypeHighlight, {
               detect: true,
               ignoreMissing: true
-            }]
+            }],
+            rehypeImageOptimization
           ]
         }),
       })
