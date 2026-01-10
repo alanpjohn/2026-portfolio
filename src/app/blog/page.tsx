@@ -3,6 +3,8 @@ import { Container } from "@/components/layout/Container";
 import { getPaginatedBlogPosts } from "@/lib/api/blog";
 import { formatDate } from "@/lib/utils/helpers";
 
+export const dynamic = "force-static";
+
 export default async function BlogPage({
   searchParams,
 }: {
