@@ -4,23 +4,18 @@ import rehypeHighlightCodeLines from "rehype-highlight-code-lines";
 import { rehypeImageOptimization } from "./src/lib/content/rehype-images";
 import { execSync } from "child_process";
 
-// Pre-hook to sync content before velite runs
-function syncContentPreHook() {
-  console.log("🔄 Syncing content before velite build...");
-
-  // Auto-detect mode: 'build' if we're in a build context, 'sync' otherwise
-  const isBuild =
-    process.env.NODE_ENV === "production" || process.env.CI === "true";
-  const mode = isBuild ? "build" : "sync";
+// Pre-hook to ensure content exists before velite runs
+function ensureContentPreHook() {
+  console.log("🔄 Ensuring content exists before velite build...");
 
   try {
-    execSync(`bunx tsx scripts/sync-content.ts ${mode}`, {
+    execSync(`bunx tsx scripts/sync-content.ts ensure`, {
       stdio: "inherit",
       cwd: process.cwd(),
     });
-    console.log("✅ Content sync complete");
+    console.log("✅ Content ready for velite");
   } catch (error) {
-    console.error("❌ Content sync failed:", error);
+    console.error("❌ Content ensure failed:", error);
     process.exit(1);
   }
 }
@@ -35,6 +30,7 @@ export default defineConfig({
         date: s.string().transform((date) => new Date(date)),
         tags: s.array(s.string()).max(10),
         excerpt: s.string().max(300),
+        publish: s.boolean().default(false),
         slug: s
           .path()
           .transform((path) =>
@@ -81,5 +77,5 @@ export default defineConfig({
       }),
     },
   },
-  prepare: syncContentPreHook,
+  prepare: ensureContentPreHook,
 });

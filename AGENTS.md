@@ -7,6 +7,7 @@ Next.js 15.5.9 + React 19.1.4 + TypeScript 5.9.3 + Tailwind CSS 4.1.18
 - Framer Motion animations with accessibility support (reduced motion)
 - Deployment via Cloudflare Workers with OpenNext.js
 - Strict TypeScript with path mapping (`@/*`) and custom Velite-generated types
+- **No testing framework** - focus on manual testing and type safety
 
 ## Commands
 
@@ -25,6 +26,35 @@ bunx tsc --noEmit        # Type check only (strict mode enabled)
 bun run velite && bun run lint && bunx tsc --noEmit && bun run build  # Full check
 ```
 
+### Testing
+```bash
+# No automated testing framework configured
+# Focus on manual testing and TypeScript type safety
+
+# Manual testing approaches:
+# - Browser testing of UI components and interactions
+# - TypeScript compilation for type errors (`bunx tsc --noEmit`)
+# - Velite content processing validation (`bun run velite`)
+# - Build process verification (`bun run build`)
+# - Content sync operations testing (`bun run content:*`)
+# - Cross-browser compatibility testing
+# - Mobile responsiveness testing
+# - Accessibility testing with screen readers
+# - Animation testing with reduced motion enabled
+
+# Note: There are no commands for running individual tests
+# as no testing framework is configured. Use the commands above
+# for manual validation of different aspects of the application.
+```
+
+### Content Sync
+```bash
+bun run content:backup    # Upload all local content to R2
+bun run content:restore   # Download missing files from R2
+bun run content:ensure    # Check and restore missing content
+bun run content:full      # Restore then backup (development sync)
+```
+
 ### Deployment
 ```bash
 bun run deploy           # Deploy to Cloudflare Workers
@@ -38,16 +68,28 @@ bun run cf-typegen       # Generate Cloudflare environment types
 ### TypeScript & Types
 - Use strict types everywhere, no `any` (use `unknown` with type guards)
 - Import types with `import type` syntax for tree-shaking
-- Leverage Velite-generated types from `.velite/index.d.ts`
+- Leverage Velite-generated types from `velite-content`
 - Define interfaces for all data structures and component props
 - Use discriminated unions for complex state management
 - Use `ReactNode` for flexible children types, `JSX.Element` for strict component returns
+- Prefer `interface` over `type` for object shapes
+- Use const assertions for literal types (`as const`)
 
 ### Import Organization
 1. React imports (alphabetical, multi-line for readability)
-2. External libraries (alphabetical)
-3. Internal imports (alphabetical, grouped by depth)
-4. Type imports (with `import type`, separate block)
+2. External libraries (alphabetical, one per line)
+3. Internal imports with `@/` prefix (alphabetical, grouped by feature)
+4. Type imports (with `import type`, separate block at end)
+5. Relative imports only when necessary (prefer `@/` path mapping)
+
+### Formatting & Style
+- Use single quotes for strings (ESLint enforced)
+- Use 2 spaces for indentation (Prettier default)
+- Max line length: 100 characters (ESLint enforced)
+- Trailing commas: always (ESLint enforced)
+- Semicolons: always required
+- Use arrow functions for callbacks and anonymous functions
+- Prefer object destructuring and spread operators
 
 ### Naming Conventions
 - Components: PascalCase (`WorkCard.tsx`, `StackedSections.tsx`)
@@ -57,6 +99,8 @@ bun run cf-typegen       # Generate Cloudflare environment types
 - Constants: UPPER_SNAKE_CASE (`SITE_CONFIG`, `DEFAULT_ANIMATION_CONFIG`)
 - Content IDs: kebab-case (`"senior-backend-engineer"`)
 - Hooks: camelCase with `use` prefix (`useActiveSection`, `useTheme`)
+- Animation configs: camelCase with `.animations.ts` suffix
+- Utility functions: camelCase (`formatDate`, `slugify`)
 
 ### Component Patterns
 - Use `'use client'` directive sparingly; prefer server components
@@ -69,10 +113,26 @@ bun run cf-typegen       # Generate Cloudflare environment types
 
 ### Animation Guidelines
 - Use Framer Motion for all animations with `useReducedMotion` support
-- Separate animation config from components (`animation-config.ts`)
+- Separate animation variants to separate config files (`*.animations.ts`)
 - Prefer `will-change` CSS hints for performance-critical animations
 - Use `AnimatePresence` for enter/exit animations
 - Test animations with reduced motion enabled
+
+### Next.js Patterns
+- Use App Router with server components by default
+- Add `'use client'` directive only when necessary (hooks, browser APIs, interactivity)
+- Leverage ISR for dynamic content with appropriate revalidation times
+- Use `next/image` for optimized images with proper sizing
+- Implement proper loading states for dynamic content
+- Use `next/link` for client-side navigation with prefetching
+
+### Tailwind CSS Patterns
+- Use design tokens from `tailwind.config.js` for consistency
+- Prefer utility classes over custom CSS when possible
+- Use responsive prefixes consistently (`sm:`, `md:`, `lg:`, `xl:`)
+- Leverage Tailwind's dark mode support with `dark:` prefix
+- Use arbitrary values sparingly (`[value]`) - prefer design tokens
+- Group related utilities and use meaningful class combinations
 
 ### Error Handling
 - Return `undefined` for not-found items (not `null`)
@@ -173,9 +233,47 @@ src/
 - Velite regenerates types automatically on build
 - Content is processed at build time for optimal performance
 
----
-Last Updated: January 5, 2026
+## Content Sync Strategy
+
+**Principle**: Local content directory is the source of truth. R2 serves as a backup/restore mechanism.
+
+**Operations**:
+- `content:backup`: Upload all local content to R2
+- `content:restore`: Download missing files from R2
+- `content:ensure`: Check and restore missing content
+- `content:full`: Restore then backup (development sync)
+
+**Guarantees**:
+- Local content is never older than R2 (user-provided)
+- No bidirectional sync - simple one-way backup
+- No conflict resolution - local always wins
+- Automatic restore when content directory is empty
+
+**Usage**:
+```bash
+# Development backup
+bun run content:backup
+
+# Restore after fresh clone
+bun run content:ensure
+```
+
+## AI Assistant Guidelines
+
+### Cursor Rules
+No Cursor rules found in `.cursor/rules/` or `.cursorrules`
+
+### Copilot Instructions
+No Copilot instructions found in `.github/copilot-instructions.md`
+
+### General AI Guidelines
+- Follow TypeScript strict mode practices
+- Use existing code patterns and conventions
+- Prefer server components over client components
+- Implement proper error handling and loading states
+- Use semantic HTML and accessibility best practices
+- Follow the established import organization and naming conventions
 
 ---
-Last Updated: January 5, 2026</content>
+Last Updated: January 10, 2026</content>
 <parameter name="filePath">/home/alan/Documents/webd/2026-portfolio/AGENTS.md
