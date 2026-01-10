@@ -90,6 +90,7 @@ export function Header() {
       })
       return () => cancelAnimationFrame(animationFrame)
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setMenuHeight(0)
     }
   }, [menuOpen])
