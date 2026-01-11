@@ -10,7 +10,7 @@ export function Footer() {
             Built with Next.js and Tailwind CSS.{" "}
             <Link
               href="/"
-              className="font-medium underline underline-offset-4"
+              className="font-medium link-foreground hover:text-accent transition-colors duration-200"
             >
               {siteConfig.title}
             </Link>
@@ -23,7 +23,7 @@ export function Footer() {
               href={link.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="link-foreground hover:text-accent transition-colors duration-200"
             >
               {link.name}
             </Link>

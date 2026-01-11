@@ -2,24 +2,27 @@
 
 @theme {
     --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-accent: var(--accent);
+    --color-alternate: var(--alternate);
 
     /* Font families */
     --font-archivo: var(--font-archivo);
     --font-clash-display: var(--font-clash-display);
 
     /* Typography scale */
-    --font-size-xs: 0.75rem;      /* 12px */
-    --font-size-sm: 0.875rem;     /* 14px */
-    --font-size-base: 1rem;       /* 16px */
-    --font-size-lg: 1.125rem;     /* 18px */
-    --font-size-xl: 1.25rem;      /* 20px */
-    --font-size-2xl: 1.5rem;      /* 24px */
-    --font-size-3xl: 1.875rem;    /* 30px */
-    --font-size-4xl: 2.25rem;     /* 36px */
-    --font-size-5xl: 3rem;        /* 48px */
-    --font-size-6xl: 3.75rem;     /* 60px */
-    --font-size-7xl: 4.5rem;      /* 72px */
-    --font-size-8xl: 6rem;        /* 96px */
+    --font-size-xs: 0.75rem; /* 12px */
+    --font-size-sm: 0.875rem; /* 14px */
+    --font-size-base: 1rem; /* 16px */
+    --font-size-lg: 1.125rem; /* 18px */
+    --font-size-xl: 1.25rem; /* 20px */
+    --font-size-2xl: 1.5rem; /* 24px */
+    --font-size-3xl: 1.875rem; /* 30px */
+    --font-size-4xl: 2.25rem; /* 36px */
+    --font-size-5xl: 3rem; /* 48px */
+    --font-size-6xl: 3.75rem; /* 60px */
+    --font-size-7xl: 4.5rem; /* 72px */
+    --font-size-8xl: 6rem; /* 96px */
 
     /* Line heights */
     --line-height-tight: 1.25;
@@ -36,12 +39,21 @@
 
 @layer base {
     :root {
-        --background: rgb(255, 255, 255);
+        --background: #f0ede6;
+        --foreground: #0d0e10;
+        --accent: #f25f4c;
+        --alternate: #ffd700;
+
         --card-shadow-active: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         --card-shadow-stacked: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
 
     .dark {
+        --background: #242526;
+        --foreground: #f0ede6;
+        --accent: #2cb67d;
+        --alternate: #ffd700;
+
         --background: rgb(0, 0, 0);
         --card-shadow-active: 0 25px 50px -12px rgba(255, 255, 255, 0.1);
         --card-shadow-stacked: 0 4px 6px -1px rgba(255, 255, 255, 0.08);
@@ -63,6 +75,24 @@
 
     .prose code {
         font-weight: 500;
+    }
+
+    /* Inline code styling - only for code within paragraphs, not pre blocks */
+    .prose code:not(pre code) {
+        color: #d73a49;
+    }
+
+    /* Blog content link styling */
+    .prose a {
+        color: hsl(var(--foreground));
+        text-decoration: underline;
+        text-decoration-style: dotted;
+        text-underline-offset: 4px;
+        transition: color 0.2s ease;
+    }
+
+    .prose a:hover {
+        color: hsl(var(--accent));
     }
 
     /* List styling */
@@ -123,7 +153,31 @@
 
     /* Smooth transitions */
     .velite-image {
-        transition: filter 0.3s ease-out, transform 0.3s ease-out;
+        transition:
+            filter 0.3s ease-out,
+            transform 0.3s ease-out;
+    }
+
+    /* Link styling utilities */
+    .link-dotted {
+        text-decoration: underline;
+        text-decoration-style: dotted;
+        text-underline-offset: 4px;
+        transition: color 0.2s ease;
+    }
+
+    .link-dotted:hover {
+        color: hsl(var(--accent));
+    }
+
+    /* Consistent link colors */
+    .link-foreground {
+        color: hsl(var(--foreground));
+        transition: color 0.2s ease;
+    }
+
+    .link-foreground:hover {
+        color: hsl(var(--accent));
     }
 
     /* Remove blur after processing */
@@ -138,14 +192,28 @@
     }
 
     /* Heading font application */
-    h1, h2, h3, h4, h5, h6,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
     .font-heading {
-        font-family: var(--font-clash-display, var(--font-archivo), system-ui, sans-serif);
+        font-family: var(
+            --font-clash-display,
+            var(--font-archivo),
+            system-ui,
+            sans-serif
+        );
     }
 
     /* Code font fallback */
-    code, pre, .font-mono {
-        font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+    code,
+    pre,
+    .font-mono {
+        font-family:
+            ui-monospace, SFMono-Regular, "SF Mono", Consolas,
+            "Liberation Mono", Menlo, monospace;
     }
 
     /* Blog content heading sizes */

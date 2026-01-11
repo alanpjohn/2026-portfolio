@@ -108,7 +108,7 @@ export function Header() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="transition-colors hover:text-foreground/80 text-foreground/60"
+                className="link-foreground hover:text-accent transition-colors duration-200"
               >
                 {link.name}
               </Link>
@@ -152,7 +152,7 @@ export function Header() {
                   >
                     <Link
                       href={link.href}
-                      className="block px-4 py-2 text-base font-medium text-foreground transition-colors hover:text-primary"
+                      className="block px-4 py-2 text-base font-medium link-foreground hover:text-accent transition-colors duration-200"
                       onClick={() => setMenuOpen(false)}
                     >
                       {link.name}

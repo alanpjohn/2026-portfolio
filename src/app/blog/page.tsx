@@ -24,11 +24,11 @@ export default async function BlogPage({
           {posts.map((post) => (
             <article
               key={post.slug}
-              className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm"
+              className="group rounded-lg border bg-card p-6 text-card-foreground shadow-sm hover:shadow-md transition-shadow duration-200"
             >
               <div className="flex flex-col space-y-2">
                 <Link href={`/blog/${post.slug}`}>
-                  <h2 className="text-2xl font-medium leading-tight transition-colors hover:text-primary">
+                  <h2 className="text-2xl font-medium leading-tight link-foreground group-hover:text-accent transition-colors duration-200">
                     {post.title}
                   </h2>
                 </Link>
@@ -42,7 +42,7 @@ export default async function BlogPage({
                   {post.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground"
+                      className="rounded-md bg-accent px-2 py-1 text-xs text-black"
                     >
                       #{tag}
                     </span>
@@ -58,7 +58,7 @@ export default async function BlogPage({
             {hasPrev && (
               <Link
                 href={`/blog?page=${currentPage - 1}`}
-                className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground"
+                className="inline-flex items-center justify-center rounded-md bg-accent px-4 py-2 text-sm font-medium text-black shadow border border-foreground transition-colors hover:bg-alternate"
               >
                 Previous
               </Link>
@@ -69,7 +69,7 @@ export default async function BlogPage({
             {hasNext && (
               <Link
                 href={`/blog?page=${currentPage + 1}`}
-                className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground"
+                className="inline-flex items-center justify-center rounded-md bg-accent px-4 py-2 text-sm font-medium text-black shadow border border-foreground transition-colors hover:bg-alternate"
               >
                 Next
               </Link>

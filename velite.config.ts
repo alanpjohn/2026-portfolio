@@ -62,7 +62,7 @@ export default defineConfig({
             type: s.enum(["project", "experience"]),
             description: s.string(),
             tags: s.array(s.string()),
-            featured: s.boolean(),
+            featured: s.boolean().default(false),
             url: s.string().optional(),
             image: s.string().optional(),
             date: s.string().transform((date) => new Date(date)),

@@ -28,7 +28,7 @@ export function WorkCard({ item }: WorkCardProps) {
                 {item.type}
             </div>
 
-            <div className={`grid py-4 gap-4 border-x-0 border-y-2 ${item.image ? 'grid-cols-1 md:grid-cols-3' : 'grid-cols-1 md:grid-cols-2'}`}>
+            <div className="grid py-4 gap-4 border-x-0 border-y-2 grid-cols-1 md:grid-cols-2">
                 <motion.div
                     variants={cellVariants}
                     initial="hidden"
@@ -44,53 +44,60 @@ export function WorkCard({ item }: WorkCardProps) {
                     </div>
                     {item.type === 'project' && item.url && (
                         <a href={item.url} target="_blank" rel="noopener noreferrer"
-                            className="inline-flex items-center justify-center rounded-none bg-primary px-6 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 uppercase self-start">
+                            className="inline-flex items-center justify-center rounded-md bg-accent px-6 py-2 text-sm font-medium text-black shadow border border-foreground transition-colors hover:bg-alternate uppercase self-start">
                             View Project
                         </a>
                     )}
                 </motion.div>
 
-                {item.image && (
-                    <motion.div
-                        variants={cellVariants}
-                        initial="hidden"
-                        animate={isInView ? "visible" : "hidden"}
-                        transition={{ duration: shouldReduceMotion ? 0 : 0.3, delay: shouldReduceMotion ? 0 : 0.1 }}
-                        className="flex justify-center"
-                    >
-                        {item.type === 'project' && item.url ? (
-                             <Link href={item.url} target="_blank" rel="noopener noreferrer">
-                                 <Image
-                                     src={item.image}
-                                     alt={title}
-                                     width={600}
-                                     height={400}
-                                     className="rounded-none shadow-lg hover:shadow-xl transition-shadow duration-300"
-                                 />
-                             </Link>
-                         ) : (
-                             <Image
-                                 src={item.image}
-                                 alt={title}
-                                 width={600}
-                                 height={400}
-                                 className="rounded-none shadow-lg"
-                             />
-                         )}
-                    </motion.div>
-                )}
-
                 <motion.div
                     variants={cellVariants}
                     initial="hidden"
                     animate={isInView ? "visible" : "hidden"}
-                    transition={{ duration: shouldReduceMotion ? 0 : 0.3, delay: shouldReduceMotion ? 0 : (item.image ? 0.2 : 0.1) }}
-                    className=""
+                    transition={{ duration: shouldReduceMotion ? 0 : 0.3, delay: shouldReduceMotion ? 0 : 0.1 }}
+                    className={`flex flex-col ${item.type === 'project' ? 'justify-between' : ''}`}
                 >
+                    {item.image && item.type === 'project' && (
+                        <div className="flex justify-center mb-4">
+                            {item.url ? (
+                                <Link href={item.url} target="_blank" rel="noopener noreferrer">
+                                    <Image
+                                        src={item.image}
+                                        alt={title}
+                                        width={600}
+                                        height={400}
+                                        className="rounded-none shadow-lg hover:shadow-xl transition-shadow duration-300"
+                                        unoptimized={true}
+                                    />
+                                </Link>
+                            ) : (
+                                <Image
+                                    src={item.image}
+                                    alt={title}
+                                    width={600}
+                                    height={400}
+                                    className="rounded-none shadow-lg"
+                                />
+                            )}
+                        </div>
+                    )}
+
+                    {item.image && item.type === 'experience' && (
+                        <div className="flex justify-center mb-4">
+                            <Image
+                                src={item.image}
+                                alt={title}
+                                width={600}
+                                height={400}
+                                className="rounded-none shadow-lg"
+                            />
+                        </div>
+                    )}
+
                     <p className="text-muted-foreground mb-4">{item.description}</p>
                     <div className="flex flex-wrap gap-2">
                         {item.tags.map((tag) => (
-                            <span key={tag} className="border border-current px-2 py-1 text-xs uppercase tracking-wider">
+                            <span key={tag} className="bg-accent px-2 py-1 text-xs uppercase tracking-wider text-black">
                                 {tag}
                             </span>
                         ))}

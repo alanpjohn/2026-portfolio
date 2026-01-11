@@ -17,7 +17,7 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <button className="p-2 rounded-md bg-gray-200 dark:bg-gray-700">
+      <button className="p-2 rounded-md bg-background border border-foreground/20">
         <div className="w-5 h-5" />
       </button>
     )
@@ -26,12 +26,12 @@ export function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="p-2 rounded-md bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+      className="p-2 rounded-md bg-background border border-foreground/20 hover:bg-accent hover:text-accent-foreground transition-colors"
       aria-label="Toggle theme"
     >
       <FontAwesomeIcon
         icon={theme === 'dark' ? faSun : faMoon}
-        className="w-5 h-5 text-yellow-500 dark:text-gray-300"
+        className="w-5 h-5 text-accent"
       />
     </button>
   )

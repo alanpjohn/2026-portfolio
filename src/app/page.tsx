@@ -1,4 +1,3 @@
-import Link from "next/link";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub, faDiscord, faLinkedin } from "@fortawesome/free-brands-svg-icons";
@@ -55,77 +54,48 @@ export default function Home() {
                 </Container>
             </Section>
 
-            <Section key="navigation" id="navigation" fullHeight>
-                <Container fullWidth>
-                    <SectionContent className="flex flex-col items-center justify-center text-center">
-                        <div className="flex flex-col gap-8 md:gap-12">
-                            <Link
-                                href="/work"
-                                className="text-4xl md:text-6xl font-medium tracking-tighter hover:text-primary transition-colors"
-                            >
-                                WORK
-                            </Link>
-                            <Link
-                                href="/blog"
-                                className="text-4xl md:text-6xl font-medium tracking-tighter hover:text-primary transition-colors"
-                            >
-                                BLOG
-                            </Link>
-                            <Link
-                                href="https://photos.alanjohn.dev"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-4xl md:text-6xl font-medium tracking-tighter hover:text-primary transition-colors"
-                            >
-                                PHOTOS
-                            </Link>
-                        </div>
-                    </SectionContent>
-                </Container>
-            </Section>
-
             <Section key="contact" id="contact" fullHeight>
                 <Container fullWidth>
                     <SectionContent className="flex flex-col items-center justify-center text-center">
                         <h2 className="text-3xl font-medium tracking-tighter sm:text-4xl md:text-5xl mb-12">
                             Contact
                         </h2>
-                         <div className="flex gap-8 md:gap-12">
-                             <a
-                                 href={socialLinks[0].url}
-                                 target="_blank"
-                                 rel="noopener noreferrer"
-                                 className="text-4xl md:text-6xl hover:text-primary transition-colors"
-                                 aria-label="GitHub"
-                             >
-                                 <FontAwesomeIcon icon={faGithub} />
-                             </a>
-                             <a
-                                 href={socialLinks[1].url}
-                                 target="_blank"
-                                 rel="noopener noreferrer"
-                                 className="text-4xl md:text-6xl hover:text-primary transition-colors"
-                                 aria-label="LinkedIn"
-                             >
-                                 <FontAwesomeIcon icon={faLinkedin} />
-                             </a>
-                             <a
-                                 href={socialLinks[2].url}
-                                 target="_blank"
-                                 rel="noopener noreferrer"
-                                 className="text-4xl md:text-6xl hover:text-primary transition-colors"
-                                 aria-label="Discord"
-                             >
-                                 <FontAwesomeIcon icon={faDiscord} />
-                             </a>
-                             <a
-                                 href={`mailto:${siteConfig.email}`}
-                                 className="text-4xl md:text-6xl hover:text-primary transition-colors"
-                                 aria-label="Email"
-                             >
-                                 <FontAwesomeIcon icon={faEnvelope} />
-                             </a>
-                         </div>
+                        <div className="flex gap-8 md:gap-12">
+                            <a
+                                href={socialLinks[0].url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-4xl md:text-6xl link-foreground link-dotted"
+                                aria-label="GitHub"
+                            >
+                                <FontAwesomeIcon icon={faGithub} />
+                            </a>
+                            <a
+                                href={socialLinks[1].url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-4xl md:text-6xl link-foreground link-dotted"
+                                aria-label="LinkedIn"
+                            >
+                                <FontAwesomeIcon icon={faLinkedin} />
+                            </a>
+                            <a
+                                href={socialLinks[2].url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-4xl md:text-6xl link-foreground link-dotted"
+                                aria-label="Discord"
+                            >
+                                <FontAwesomeIcon icon={faDiscord} />
+                            </a>
+                            <a
+                                href={`mailto:${siteConfig.email}`}
+                                className="text-4xl md:text-6xl link-foreground link-dotted"
+                                aria-label="Email"
+                            >
+                                <FontAwesomeIcon icon={faEnvelope} />
+                            </a>
+                        </div>
                     </SectionContent>
                 </Container>
             </Section>

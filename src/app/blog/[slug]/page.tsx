@@ -30,7 +30,7 @@ export default async function BlogPostPage({
                 <div className="mx-auto max-w-4xl">
                     <Link
                         href="/blog"
-                        className="mb-8 inline-flex items-center text-sm text-muted-foreground transition-colors hover:text-primary"
+                        className="mb-8 inline-flex items-center text-sm link-foreground hover:text-accent transition-colors duration-200"
                     >
                         ← Back to Blog
                     </Link>
@@ -48,7 +48,7 @@ export default async function BlogPostPage({
                             {post.tags.map((tag) => (
                                 <span
                                     key={tag}
-                                    className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground"
+                                    className="rounded-md bg-accent px-2 py-1 text-xs text-black"
                                 >
                                     #{tag}
                                 </span>
