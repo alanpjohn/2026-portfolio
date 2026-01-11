@@ -3,6 +3,10 @@ import rehypeHighlight from "rehype-highlight";
 import rehypeHighlightCodeLines from "rehype-highlight-code-lines";
 import { rehypeImageOptimization } from "./src/lib/content/rehype-images";
 import { execSync } from "child_process";
+import {
+  generateBlogOGImage,
+  generateDefaultOGImage,
+} from "@/lib/seo/og-images";
 
 // Pre-hook to ensure content exists before velite runs
 function ensureContentPreHook() {
@@ -78,4 +82,10 @@ export default defineConfig({
     },
   },
   prepare: ensureContentPreHook,
+  complete: async (data) => {
+    await generateDefaultOGImage();
+    for (const post of data.blog) {
+      await generateBlogOGImage(post);
+    }
+  },
 });

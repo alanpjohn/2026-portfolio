@@ -1,33 +1,26 @@
 import Link from 'next/link'
-import { socialLinks, siteConfig } from '@/data/config'
+import { navigationLinks, siteConfig } from '@/data/config'
 
 export function Footer() {
   return (
     <footer className="border-t bg-background">
-      <div className="container flex flex-col items-center justify-between gap-4 py-10 md:h-24 md:flex-row md:py-0">
-        <div className="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
-          <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-            Built with Next.js and Tailwind CSS.{" "}
+      <div className="container py-8">
+        {/* Row 1: Navigation Links */}
+        <div className="flex flex-wrap items-center justify-center gap-6 mb-6">
+          {navigationLinks.map((link) => (
             <Link
-              href="/"
-              className="font-medium link-foreground hover:text-accent transition-colors duration-200"
-            >
-              {siteConfig.title}
-            </Link>
-          </p>
-        </div>
-        <div className="flex items-center space-x-4">
-          {socialLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="link-foreground hover:text-accent transition-colors duration-200"
+              key={link.href}
+              href={link.href}
+              className="text-sm link-foreground hover:text-accent transition-colors duration-200"
             >
               {link.name}
             </Link>
           ))}
+        </div>
+
+        {/* Row 2: Attribution */}
+        <div className="text-center text-sm text-muted-foreground">
+          Built with {siteConfig.deployment.builtWith}, deployed on {siteConfig.deployment.platform}
         </div>
       </div>
     </footer>

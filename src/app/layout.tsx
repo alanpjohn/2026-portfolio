@@ -4,11 +4,13 @@ import { ThemeProvider } from "@/lib/theme/provider";
 import { HighlightThemeProvider } from "@/components/ui/HighlightThemeProvider";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { seoConfig } from "@/lib/seo/config";
 import "./globals.css";
 
 export const metadata: Metadata = {
-    title: "Portfolio Website",
-    description: "A modern portfolio with blog and content management",
+    metadataBase: new URL('https://alanjohn.dev'),
+    title: seoConfig.defaultTitle,
+    description: seoConfig.defaultDescription,
 };
 
 export default function RootLayout({
@@ -25,8 +27,7 @@ export default function RootLayout({
             <body suppressHydrationWarning>
                 <ThemeProvider
                     attribute="class"
-                    defaultTheme="system"
-                    enableSystem
+                    defaultTheme="dark"
                     disableTransitionOnChange
                 >
                     <HighlightThemeProvider />

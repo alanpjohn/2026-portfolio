@@ -42,7 +42,7 @@
         --background: #f0ede6;
         --foreground: #0d0e10;
         --accent: #f25f4c;
-        --alternate: #ffd700;
+        --alternate: #7e1dfb;
 
         --card-shadow-active: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         --card-shadow-stacked: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
@@ -52,7 +52,7 @@
         --background: #242526;
         --foreground: #f0ede6;
         --accent: #2cb67d;
-        --alternate: #ffd700;
+        --alternate: #7e1dfb;
 
         --background: rgb(0, 0, 0);
         --card-shadow-active: 0 25px 50px -12px rgba(255, 255, 255, 0.1);
@@ -199,6 +199,16 @@
     h5,
     h6,
     .font-heading {
+        font-family: var(
+            --font-clash-display,
+            var(--font-archivo),
+            system-ui,
+            sans-serif
+        );
+    }
+
+    /* Logo font application */
+    .font-logo {
         font-family: var(
             --font-clash-display,
             var(--font-archivo),

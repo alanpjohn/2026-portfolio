@@ -95,6 +95,15 @@ async function downloadFile(r2Key: string, localPath: string): Promise<void> {
   );
 }
 
+async function deleteFile(r2Key: string): Promise<void> {
+  execSync(
+    `bun wrangler r2 object delete ${R2_BUCKET}/${r2Key} --remote`,
+    {
+      stdio: "inherit",
+    },
+  );
+}
+
 function buildManifest(files: string[]): RemoteManifest {
   const manifestFiles: Record<string, FileMetadata> = {};
 
@@ -126,15 +135,31 @@ async function uploadManifest(manifest: RemoteManifest): Promise<void> {
 async function backup(): Promise<void> {
   console.log("🔄 Backing up local content to R2...");
 
-  const files = findContentFiles();
+  const localFiles = findContentFiles();
+  const remoteManifest = await getRemoteManifest();
+  const remoteFiles = remoteManifest ? Object.keys(remoteManifest.files) : [];
 
-  if (files.length === 0) {
+  if (localFiles.length === 0) {
     console.log("⚠️  No content files found to backup");
     return;
   }
 
-  // Upload all files
-  for (const file of files) {
+  // Delete orphaned files from R2 (files in R2 but not in local)
+  for (const remoteFile of remoteFiles) {
+    if (!localFiles.includes(remoteFile)) {
+      try {
+        const r2Key = `content/${remoteFile}`;
+        console.log(`🗑️ Deleting ${remoteFile} from R2`);
+        await deleteFile(r2Key);
+      } catch (error) {
+        console.warn(`⚠️  Failed to delete ${remoteFile}:`, error);
+        // Continue with other files
+      }
+    }
+  }
+
+  // Upload new/modified local files
+  for (const file of localFiles) {
     try {
       const localPath = join(CONTENT_DIR, file);
       const r2Key = `content/${file}`;
@@ -148,7 +173,7 @@ async function backup(): Promise<void> {
 
   // Upload manifest
   try {
-    const manifest = buildManifest(files);
+    const manifest = buildManifest(localFiles);
     await uploadManifest(manifest);
     console.log("📝 Manifest uploaded");
   } catch (error) {
@@ -208,36 +233,44 @@ async function ensure(): Promise<void> {
   }
 
   const localFiles = findContentFiles();
-  const remoteFileCount = Object.keys(remoteManifest.files).length;
 
   if (localFiles.length === 0) {
     console.log("📂 Content directory empty - restoring from R2...");
     await restore();
-  } else if (localFiles.length < remoteFileCount) {
-    const missingCount = remoteFileCount - localFiles.length;
-    console.log(`⚠️  Missing ${missingCount} files - restoring...`);
-    await restore();
   } else {
-    console.log("✅ Content directory ready");
+    // Check for differences with remote manifest
+    const remoteFiles = Object.keys(remoteManifest.files);
+    const localSet = new Set(localFiles);
+    const remoteSet = new Set(remoteFiles);
+
+    const missingLocally = remoteFiles.filter(f => !localSet.has(f));
+    const extraLocally = localFiles.filter(f => !remoteSet.has(f));
+
+    if (missingLocally.length > 0 || extraLocally.length > 0) {
+      console.warn("⚠️  Content directory differs from backup:");
+      if (missingLocally.length > 0) {
+        console.warn(`   Missing locally: ${missingLocally.join(', ')}`);
+      }
+      if (extraLocally.length > 0) {
+        console.warn(`   Extra locally: ${extraLocally.join(', ')}`);
+      }
+      console.warn("ℹ️  Run 'bun run content:backup' to sync changes to R2");
+    } else {
+      console.log("✅ Content directory matches backup");
+    }
   }
 }
 
-async function full(): Promise<void> {
-  console.log("🔄 Running full sync: restore then backup...");
-  await restore();
-  await backup();
-  console.log("✅ Full sync complete");
-}
+
 
 async function main() {
   const command = process.argv[2];
 
-  if (!command || !["backup", "restore", "ensure", "full"].includes(command)) {
-    console.error("Usage: tsx scripts/sync-content.ts <backup|restore|ensure|full>");
-    console.error("  backup: Upload all local content to R2");
+  if (!command || !["backup", "restore", "ensure"].includes(command)) {
+    console.error("Usage: tsx scripts/sync-content.ts <backup|restore|ensure>");
+    console.error("  backup: Sync local content to R2 (removes deleted files)");
     console.error("  restore: Download missing files from R2");
-    console.error("  ensure: Check and restore missing content");
-    console.error("  full: Restore then backup (development sync)");
+    console.error("  ensure: Check content directory and warn about differences");
     process.exit(1);
   }
 
@@ -251,9 +284,6 @@ async function main() {
         break;
       case "ensure":
         await ensure();
-        break;
-      case "full":
-        await full();
         break;
     }
   } catch (error) {

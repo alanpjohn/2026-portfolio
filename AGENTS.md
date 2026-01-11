@@ -4,6 +4,7 @@
 Next.js 15.5.9 + React 19.1.4 + TypeScript 5.9.3 + Tailwind CSS 4.1.18
 - Static home page + ISR for blog/work pages (1-day revalidation)
 - Velite content engine with markdown (blog) and YAML (work items: projects + experiences)
+- Automatic OG image generation using Satori + Resvg (1200x630 PNGs)
 - Framer Motion animations with accessibility support (reduced motion)
 - Deployment via Cloudflare Workers with OpenNext.js
 - Strict TypeScript with path mapping (`@/*`) and custom Velite-generated types
@@ -15,12 +16,12 @@ Next.js 15.5.9 + React 19.1.4 + TypeScript 5.9.3 + Tailwind CSS 4.1.18
 ```bash
 bun run dev              # Start dev server with Velite build + Turbopack
 next dev --turbopack     # Dev server without Velite (if content built)
-bun run velite           # Build content only (regenerates types)
+bun run velite           # Build content only (regenerates types and OG images)
 ```
 
 ### Build & Quality
 ```bash
-bun run build            # Full production build (includes content)
+bun run build            # Full production build (includes content + OG images)
 bun run lint             # ESLint + Next.js rules (core-web-vitals + TypeScript)
 bunx tsc --noEmit        # Type check only (strict mode enabled)
 bun run velite && bun run lint && bunx tsc --noEmit && bun run build  # Full check
@@ -110,6 +111,7 @@ bun run cf-typegen       # Generate Cloudflare environment types
 - Prefer functional components with hooks over class components
 - Use Next.js 15 App Router with server components by default
 - Leverage ISR for dynamic content (1-day revalidation)
+- Theme defaults to dark mode with system preference support
 
 ### Animation Guidelines
 - Use Framer Motion for all animations with `useReducedMotion` support
@@ -121,10 +123,12 @@ bun run cf-typegen       # Generate Cloudflare environment types
 ### Next.js Patterns
 - Use App Router with server components by default
 - Add `'use client'` directive only when necessary (hooks, browser APIs, interactivity)
+- Set `metadataBase` in root layout for proper social media URL resolution
 - Leverage ISR for dynamic content with appropriate revalidation times
 - Use `next/image` for optimized images with proper sizing
 - Implement proper loading states for dynamic content
 - Use `next/link` for client-side navigation with prefetching
+- Include Open Graph and Twitter metadata for social sharing
 
 ### Tailwind CSS Patterns
 - Use design tokens from `tailwind.config.js` for consistency
@@ -230,8 +234,9 @@ src/
 ## Content Management
 - Add blog posts: Create `.md` in `content/blog/`, run `bun run velite`
 - Add work projects: Edit `content/work.yaml`, run `bun run velite`
-- Velite regenerates types automatically on build
+- Velite regenerates types and OG images automatically on build
 - Content is processed at build time for optimal performance
+- OG images are generated in `public/static/og/` (1200x630 PNG format)
 
 ## Content Sync Strategy
 
@@ -258,6 +263,26 @@ bun run content:backup
 bun run content:ensure
 ```
 
+## OG Image Generation
+
+**Architecture:**
+- Uses Satori for SVG generation from React components
+- Converts SVG to PNG using Resvg (1200x630 format)
+- Integrated with Velite's `complete` hook for automatic generation
+- Fonts: Clash Display (headings) and Archivo (body) from `public/assets/fonts/`
+
+**Generated Images:**
+- `default.png` - Home page, work page, blog index (shows "Alan John" branding)
+- `{slug}.png` - Individual blog posts (shows title, excerpt, tags, date, "AJ" footer)
+
+**Design System:**
+- Dark theme: `#0d0e10` background, `#f0ede6` text, `#2cb67d` accent, `#ffd700` gold
+- Left-aligned content with vertical centering
+- Blog posts include excerpt below title
+- Subtle "AJ" branding in bottom-right corner
+
+**File Location:** `src/lib/seo/og-images.tsx`
+
 ## AI Assistant Guidelines
 
 ### Cursor Rules
@@ -275,5 +300,5 @@ No Copilot instructions found in `.github/copilot-instructions.md`
 - Follow the established import organization and naming conventions
 
 ---
-Last Updated: January 10, 2026</content>
+Last Updated: January 11, 2026</content>
 <parameter name="filePath">/home/alan/Documents/webd/2026-portfolio/AGENTS.md

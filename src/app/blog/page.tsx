@@ -2,8 +2,35 @@ import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { getPaginatedBlogPosts } from "@/lib/api/blog";
 import { formatDate } from "@/lib/utils/helpers";
+import { seoConfig } from "@/lib/seo/config";
+import type { Metadata } from "next";
 
 export const dynamic = "force-static";
+
+export const metadata: Metadata = {
+    title: seoConfig.pages.blog.title,
+    description: seoConfig.pages.blog.description,
+    openGraph: {
+        title: seoConfig.pages.blog.title,
+        description: seoConfig.pages.blog.description,
+        url: '/blog',
+        type: 'website',
+        images: [
+            {
+                url: '/static/og/default.png',
+                width: 1200,
+                height: 630,
+                alt: 'Blog - Alan John',
+            }
+        ],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: seoConfig.pages.blog.title,
+        description: seoConfig.pages.blog.description,
+        images: ['/static/og/default.png'],
+    },
+};
 
 export default async function BlogPage({
   searchParams,
