@@ -49,34 +49,31 @@ export default async function BlogPage({
 
         <div className="grid gap-8">
           {posts.map((post) => (
-            <article
-              key={post.slug}
-              className="group rounded-lg border bg-card p-6 text-card-foreground shadow-sm hover:shadow-md transition-shadow duration-200"
-            >
-              <div className="flex flex-col space-y-2">
-                <Link href={`/blog/${post.slug}`}>
+            <Link key={post.slug} href={`/blog/${post.slug}`}>
+              <article className="group rounded-lg border bg-card p-6 text-card-foreground shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer">
+                <div className="flex flex-col space-y-2">
                   <h2 className="text-2xl font-medium leading-tight link-foreground group-hover:text-accent transition-colors duration-200">
                     {post.title}
                   </h2>
-                </Link>
-                <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                  <time dateTime={post.date.toISOString()}>
-                    {formatDate(post.date)}
-                  </time>
+                  <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                    <time dateTime={post.date.toISOString()}>
+                      {formatDate(post.date)}
+                    </time>
+                  </div>
+                  <p className="mt-2 text-muted-foreground">{post.excerpt}</p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {post.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-md bg-accent px-2 py-1 text-xs text-black"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-                <p className="mt-2 text-muted-foreground">{post.excerpt}</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {post.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-md bg-accent px-2 py-1 text-xs text-black"
-                    >
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </article>
+              </article>
+            </Link>
           ))}
         </div>
 

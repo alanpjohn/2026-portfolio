@@ -9,6 +9,7 @@
     /* Font families */
     --font-archivo: var(--font-archivo);
     --font-clash-display: var(--font-clash-display);
+    --font-nippo: var(--font-nippo);
 
     /* Typography scale */
     --font-size-xs: 0.75rem; /* 12px */
@@ -186,6 +187,43 @@
         transform: scale(1);
     }
 
+    /* CRT Halo Bleed Effect */
+
+    .crt-halo-subtle {
+        /* Halo bleed for hero text */
+        animation: textShadowSubtle 2.5s infinite;
+    }
+
+    /* Enhanced bleed effect in dark mode */
+    .dark .crt-halo-subtle {
+        animation: textShadowSubtleDark 2.5s infinite;
+    }
+
+    @keyframes textShadowSubtle {
+        /* Halo bleed for hero text (light mode) */
+        0% {text-shadow: 1px 0 2px rgba(42, 183, 125, 0.4), -1px 0 2px rgba(126, 30, 251, 0.35);}
+        25% {text-shadow: 2px 0 3px rgba(42, 183, 125, 0.4), -2px 0 3px rgba(126, 30, 251, 0.35);}
+        50% {text-shadow: 0.5px 0 2px rgba(42, 183, 125, 0.4), -0.5px 0 2px rgba(126, 30, 251, 0.35);}
+        75% {text-shadow: 1.5px 0 2.5px rgba(42, 183, 125, 0.4), -1.5px 0 2.5px rgba(126, 30, 251, 0.35);}
+        100% {text-shadow: 1.8px 0 3px rgba(42, 183, 125, 0.4), -1.8px 0 3px rgba(126, 30, 251, 0.35);}
+    }
+
+    @keyframes textShadowSubtleDark {
+        /* Enhanced halo bleed for dark mode */
+        0% {text-shadow: 1.5px 0 3px rgba(42, 183, 125, 0.6), -1.5px 0 3px rgba(126, 30, 251, 0.5);}
+        25% {text-shadow: 3px 0 4px rgba(42, 183, 125, 0.6), -3px 0 4px rgba(126, 30, 251, 0.5);}
+        50% {text-shadow: 0.8px 0 3px rgba(42, 183, 125, 0.6), -0.8px 0 3px rgba(126, 30, 251, 0.5);}
+        75% {text-shadow: 2.2px 0 3.5px rgba(42, 183, 125, 0.6), -2.2px 0 3.5px rgba(126, 30, 251, 0.5);}
+        100% {text-shadow: 2.5px 0 4px rgba(42, 183, 125, 0.6), -2.5px 0 4px rgba(126, 30, 251, 0.5);}
+    }
+
+    /* Respect reduced motion preferences */
+    @media (prefers-reduced-motion: reduce) {
+        .crt-halo-subtle {
+            animation: none;
+        }
+    }
+
     /* Font application */
     html {
         font-family: var(--font-archivo, system-ui, -apple-system, sans-serif);
@@ -209,12 +247,7 @@
 
     /* Logo font application */
     .font-logo {
-        font-family: var(
-            --font-clash-display,
-            var(--font-archivo),
-            system-ui,
-            sans-serif
-        );
+        font-family: var(--font-nippo, system-ui, sans-serif);
     }
 
     /* Code font fallback */

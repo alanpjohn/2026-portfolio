@@ -26,9 +26,13 @@
     },
     "routes": [
         {
-            "pattern": "test.alanjohn.dev",
+            "pattern": "alanjohn.dev",
+            "custom_domain": true,
+        },
+        {
+            "pattern": "www.alanjohn.dev",
             "custom_domain": true
-        }
+        },
     ],
     "services": [
         {
@@ -55,8 +59,8 @@
     "r2_buckets": [
         {
             "binding": "CONTENT_BUCKET",
-            "bucket_name": "portfolio-assets"
-        }
+            "bucket_name": "portfolio-assets",
+        },
     ],
     /**
    * Environment Variables

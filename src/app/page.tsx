@@ -6,7 +6,12 @@ import {
   faDiscord,
   faLinkedin,
 } from "@fortawesome/free-brands-svg-icons";
-import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEnvelope,
+  faBook,
+  faBriefcase,
+  faCamera,
+} from "@fortawesome/free-solid-svg-icons";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { SectionContent } from "@/components/layout/SectionContent";
@@ -46,24 +51,42 @@ export default function Home() {
       <Section key="hero" id="hero" fullHeight>
         <Container fullWidth>
           <SectionContent className="flex flex-col items-center justify-center text-center">
-            <h1 className="text-8xl font-logo font-semibold tracking-tighter sm:text-9xl md:text-[12rem] lg:text-[14rem] leading-none">
+            <h1 className="text-8xl font-logo tracking-normal crt-halo-subtle sm:text-9xl md:text-[12rem] lg:text-[14rem] leading-none">
               ALAN JOHN
             </h1>
-            <p className="mt-8 text-2xl font-medium text-muted-foreground sm:text-3xl md:text-4xl">
-              SOFTWARE ENGINEER
+            <p className="mt-8 text-2xl font-logo text-muted-foreground crt-halo-subtle sm:text-3xl md:text-4xl">
+              Software Engineer
             </p>
 
             {/* Navigation Buttons */}
             <div className="mt-12 flex flex-col gap-4 sm:flex-row sm:gap-6">
-              {navigationLinks.slice(1, 4).map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="inline-flex items-center justify-center rounded-md bg-accent px-6 py-3 text-sm font-medium text-black shadow border border-black transition-colors hover:bg-alternate"
-                >
-                  {link.name}
-                </Link>
-              ))}
+              {navigationLinks.slice(1, 4).map((link) => {
+                const getIcon = () => {
+                  switch (link.href) {
+                    case "/blog":
+                      return faBook;
+                    case "/work":
+                      return faBriefcase;
+                    case "https://photos.alanjohn.dev":
+                      return faCamera;
+                    default:
+                      return null;
+                  }
+                };
+
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="inline-flex items-center justify-center gap-2 rounded-md bg-accent px-6 py-3 font-medium text-2xl text-black shadow border border-black transition-colors hover:bg-alternate"
+                  >
+                    {getIcon() && (
+                      <FontAwesomeIcon icon={getIcon()!} className="text-xl" />
+                    )}
+                    {link.name}
+                  </Link>
+                );
+              })}
             </div>
 
             {/* Scroll Indicator */}
@@ -85,10 +108,11 @@ export default function Home() {
                   About Me
                 </h2>
                 <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
-                  Backend Engineer specialising in AI applications and cloud
-                  computing with experience in research and early stage SaaS
-                  startups. Passionate about building scalable solutions that
-                  make a real impact.
+                  Twenty Six Year Backend Engineer from Kerala, India
+                  specialising in AI applications and cloud computing with
+                  experience in research and early stage SaaS startups.
+                  Passionate about building scalable solutions that make a real
+                  impact.
                 </p>
               </div>
               <div className="flex-shrink-0">

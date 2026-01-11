@@ -21,10 +21,15 @@ async function loadFonts() {
 
   try {
     // Load Clash Display Semibold OTF (for headings)
-    const clashDisplayFont = readFileSync(join(fontDir, "ClashDisplay-Semibold.otf"));
+    const clashDisplayFont = readFileSync(
+      join(fontDir, "ClashDisplay-Semibold.otf"),
+    );
 
     // Load Archivo Regular OTF (for body text)
     const archivoFont = readFileSync(join(fontDir, "Archivo-Regular.otf"));
+
+    // Load Nippo Regular OTF (for logo)
+    const nippoFont = readFileSync(join(fontDir, "Nippo-Regular.otf"));
 
     return [
       {
@@ -36,6 +41,12 @@ async function loadFonts() {
       {
         name: "Archivo",
         data: archivoFont,
+        weight: 400 as const, // Regular
+        style: "normal" as const,
+      },
+      {
+        name: "Nippo",
+        data: nippoFont,
         weight: 400 as const, // Regular
         style: "normal" as const,
       },
@@ -75,7 +86,9 @@ function OGCard({ title, description, tags, date }: OGCardProps) {
       }}
     >
       {/* Main content - left aligned */}
-      <div style={{ display: "flex", flexDirection: "column", maxWidth: "1000px" }}>
+      <div
+        style={{ display: "flex", flexDirection: "column", maxWidth: "1000px" }}
+      >
         {/* Title - Large Clash Display */}
         <h1
           style={{
@@ -110,7 +123,15 @@ function OGCard({ title, description, tags, date }: OGCardProps) {
         )}
 
         {/* Date and tags row */}
-        <div style={{ display: "flex", alignItems: "center", gap: "16px", marginBottom: "32px", flexWrap: "wrap" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "16px",
+            marginBottom: "32px",
+            flexWrap: "wrap",
+          }}
+        >
           <span
             style={{
               fontSize: "20px",
@@ -123,7 +144,7 @@ function OGCard({ title, description, tags, date }: OGCardProps) {
 
           {/* Tags */}
           <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-            {tags.slice(0, 3).map((tag) => (
+            {tags.slice(0, 5).map((tag) => (
               <span
                 key={tag}
                 style={{
@@ -146,12 +167,19 @@ function OGCard({ title, description, tags, date }: OGCardProps) {
       </div>
 
       {/* Footer - AJ on the right */}
-      <div style={{ position: "absolute", bottom: "40px", right: "60px", display: "flex" }}>
+      <div
+        style={{
+          position: "absolute",
+          bottom: "40px",
+          right: "60px",
+          display: "flex",
+        }}
+      >
         <span
           style={{
-            fontFamily: "Clash Display",
+            fontFamily: "Nippo",
             fontSize: "32px",
-            fontWeight: 600,
+            fontWeight: 400,
             color: "#f0ede6", // Same as foreground text
           }}
         >
@@ -193,7 +221,7 @@ export async function generateBlogOGImage({
       width: 1200,
       height: 630,
       fonts,
-    }
+    },
   );
 
   console.log(`✅ Generated SVG for ${slug}`);
@@ -227,8 +255,8 @@ export async function generateDefaultOGImage() {
   // Default content
   const defaultProps: OGCardProps = {
     title: "Alan John",
-    description: "developer portfolio & blog",
-    tags: ["Portfolio", "Blog", "Work"],
+    description: "Developer portfolio & blog",
+    tags: ["Backend", "Cloud", "Linux", "AI"],
     date: formatDate(new Date()),
   };
 
