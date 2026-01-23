@@ -24,7 +24,7 @@ class VeliteContentAPI implements ContentAPI {
             .sort(
                 (a: BlogPost, b: BlogPost) =>
                     new Date(b.date).getTime() - new Date(a.date).getTime(),
-            ).filter((post: BlogPost) => post.publish || env.NODE_ENV != "production");
+            ).filter((post: BlogPost) => post.publish || env.NODE_ENV != "production" || env.INCLUDE_ALL === "true");
     }
 
     getBlogPostBySlug(slug: string): BlogPost | undefined {

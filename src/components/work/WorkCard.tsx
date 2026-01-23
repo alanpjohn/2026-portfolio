@@ -44,7 +44,7 @@ export function WorkCard({ item }: WorkCardProps) {
           className="flex flex-col justify-between"
         >
           <div>
-            <h3 className="text-5xl md:text-7xl font-medium">{title}</h3>
+            <h2 className="text-5xl md:text-7xl font-medium">{title}</h2>
             <time
               dateTime={item.date.toISOString()}
               className="my-2 text-md text-muted-foreground"

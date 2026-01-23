@@ -5,6 +5,7 @@
     "scripts": {
         "dev": "next dev --turbopack",
         "build": "bun run optimize-images && velite && next build",
+        "build:audit": "bun run optimize-images && velite && INCLUDE_ALL=true next build",
         "start": "bunx serve@latest out",
         "lint": "eslint ./src/",
         "velite": "velite",
@@ -12,7 +13,8 @@
         "content:backup": "bunx tsx scripts/sync-content.ts backup",
         "content:restore": "bunx tsx scripts/sync-content.ts restore",
         "content:ensure": "bunx tsx scripts/sync-content.ts ensure",
-        "deploy:pages": "bun run optimize-images && velite && next build && wrangler pages deploy ./out --project-name=2026-portfolio-static"
+        "deploy:pages": "bun run optimize-images && velite && next build && wrangler pages deploy ./out --project-name=2026-portfolio-static",
+        "audit:lighthouse": "lhci autorun --config=.lighthouserc.js"
     },
     "dependencies": {
         "@fortawesome/fontawesome-svg-core": "^7.1.0",
@@ -35,6 +37,7 @@
         "velite": "^0.3.1"
     },
     "devDependencies": {
+        "@lhci/cli": "^0.15.1",
         "@tailwindcss/postcss": "^4.1.18",
         "@types/node": "^25.0.10",
         "@types/react": "^19.2.9",
