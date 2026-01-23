@@ -8,7 +8,7 @@ import { seoConfig } from "@/lib/seo/config";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://test.alanjohn.dev'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://alanjohn.dev'),
   title: seoConfig.defaultTitle,
   description: seoConfig.defaultDescription,
 };

@@ -14,7 +14,7 @@ export const seoConfig: SEOConfig = {
   siteName: 'Alan John',
   defaultTitle: 'Portfolio Website',
   defaultDescription: 'Software Engineer specializing in AI applications and cloud computing',
-  baseUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://test.alanjohn.dev',
+  baseUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://alanjohn.dev',
   pages: {
     home: {
       title: 'Home - Alan John',
