@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { CustomImage } from "@/components/ui/Image";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -116,12 +116,13 @@ export default function Home() {
                 </p>
               </div>
               <div className="flex-shrink-0">
-                <Image
+                <CustomImage
                   src="/images/Alan.jpg"
                   alt="Alan John"
                   width={320}
                   height={320}
                   className="w-64 h-64 md:w-80 md:h-80 object-cover rounded-lg shadow-lg"
+                  priority={true}
                 />
               </div>
             </div>

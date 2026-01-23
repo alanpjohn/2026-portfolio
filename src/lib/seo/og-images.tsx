@@ -2,10 +2,46 @@ import React from "react";
 import { BlogPost } from "velite-content";
 import { Resvg } from "@resvg/resvg-js";
 import satori from "satori";
-import { readFileSync, writeFileSync, mkdirSync } from "fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "fs";
 import { join } from "path";
+import crypto from "crypto";
 import { formatDate } from "@/lib/utils/helpers";
 import { siteConfig } from "@/data/config";
+
+const OG_CACHE_FILE = '.cache/og-generation.json'
+
+interface OGCacheEntry {
+  mtime: number
+  hash: string
+}
+
+interface OGCache {
+  [slug: string]: OGCacheEntry
+}
+
+function loadOGCache(): OGCache {
+  try {
+    if (existsSync(OG_CACHE_FILE)) {
+      return JSON.parse(readFileSync(OG_CACHE_FILE, 'utf-8'))
+    }
+  } catch (error) {
+    console.warn('Failed to load OG cache:', error)
+  }
+  return {}
+}
+
+function saveOGCache(cache: OGCache) {
+  try {
+    mkdirSync(join(process.cwd(), '.cache'), { recursive: true })
+    writeFileSync(OG_CACHE_FILE, JSON.stringify(cache, null, 2))
+  } catch (error) {
+    console.warn('Failed to save OG cache:', error)
+  }
+}
+
+function getContentHash(content: string): string {
+  return crypto.createHash('md5').update(content).digest('hex')
+}
 
 // All the modifiable data in the OG Image
 type OGCardProps = {
@@ -207,6 +243,17 @@ export async function generateBlogOGImage({
   date,
   tags,
 }: BlogPost) {
+  const contentString = `${title}|${excerpt}|${date.toISOString()}|${tags.join(',')}`
+  const contentHash = getContentHash(contentString)
+
+  const cache = loadOGCache()
+  const cached = cache[slug]
+
+  if (cached && cached.hash === contentHash) {
+    console.log(`Skipping OG image for ${slug} (unchanged)`)
+    return
+  }
+
   const fonts = await loadFonts();
   const ogDir = join(process.cwd(), "public", "static", "og");
 
@@ -248,11 +295,27 @@ export async function generateBlogOGImage({
   writeFileSync(outputPath, pngBuffer);
 
   console.log(`✅ Generated OG image: ${slug}.png`);
+
+  // Update cache
+  cache[slug] = { mtime: Date.now(), hash: contentHash }
+  saveOGCache(cache)
 }
 
 // This function generates the default OG image used for non-blog pages using
 // Satori and ReSVG and saved as default.png in the public/static directory
 export async function generateDefaultOGImage() {
+  const contentString = `Alan John|Developer portfolio & blog|Backend,Cloud,Linux,AI`
+  const contentHash = getContentHash(contentString)
+
+  const cache = loadOGCache()
+  const slug = 'default'
+  const cached = cache[slug]
+
+  if (cached && cached.hash === contentHash) {
+    console.log(`Skipping default OG image (unchanged)`)
+    return
+  }
+
   const fonts = await loadFonts();
   const ogDir = join(process.cwd(), "public", "static", "og");
 
@@ -289,4 +352,8 @@ export async function generateDefaultOGImage() {
   writeFileSync(outputPath, pngBuffer);
 
   console.log(`✅ Generated default OG image: default.png`);
+
+  // Update cache
+  cache[slug] = { mtime: Date.now(), hash: contentHash }
+  saveOGCache(cache)
 }

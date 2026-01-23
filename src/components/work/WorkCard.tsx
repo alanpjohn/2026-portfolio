@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils/helpers";
-import Image from "next/image";
+import { CustomImage } from "@/components/ui/Image";
 import { useCellAnimation, cellVariants } from "./WorkCard.animations";
 import type { WorkItem } from "@/types/work";
 
@@ -78,17 +78,16 @@ export function WorkCard({ item }: WorkCardProps) {
             <div className="flex justify-center mb-4">
               {item.url ? (
                 <Link href={item.url} target="_blank" rel="noopener noreferrer">
-                  <Image
+                  <CustomImage
                     src={item.image}
                     alt={title}
                     width={600}
                     height={400}
                     className="rounded-none shadow-lg hover:shadow-xl transition-shadow duration-300"
-                    unoptimized={true}
                   />
                 </Link>
               ) : (
-                <Image
+                <CustomImage
                   src={item.image}
                   alt={title}
                   width={600}
@@ -101,7 +100,7 @@ export function WorkCard({ item }: WorkCardProps) {
 
           {item.image && item.type === "experience" && (
             <div className="flex justify-center mb-4">
-              <Image
+              <CustomImage
                 src={item.image}
                 alt={title}
                 width={600}
