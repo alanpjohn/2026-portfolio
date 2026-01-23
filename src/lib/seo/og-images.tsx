@@ -85,9 +85,14 @@ function OGCard({ title, description, tags, date }: OGCardProps) {
         fontFamily: "Archivo",
       }}
     >
-      {/* Main content - left aligned */}
+      {/* Main content - left aligned for blog, centered for default */}
       <div
-        style={{ display: "flex", flexDirection: "column", maxWidth: "1000px" }}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          maxWidth: "1000px",
+          ...(isBlogPost ? {} : { alignItems: "center", textAlign: "center" })
+        }}
       >
         {/* Title - Large Clash Display */}
         <h1
@@ -116,6 +121,7 @@ function OGCard({ title, description, tags, date }: OGCardProps) {
               WebkitLineClamp: 3,
               WebkitBoxOrient: "vertical",
               overflow: "hidden",
+              ...(isBlogPost ? {} : { textAlign: "center" })
             }}
           >
             {description}
@@ -130,6 +136,7 @@ function OGCard({ title, description, tags, date }: OGCardProps) {
             gap: "16px",
             marginBottom: "32px",
             flexWrap: "wrap",
+            ...(isBlogPost ? {} : { justifyContent: "center" })
           }}
         >
           <span

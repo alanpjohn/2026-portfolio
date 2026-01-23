@@ -62,24 +62,24 @@ export default function WorkPage() {
                 <FontAwesomeIcon icon={faDownload} className="text-xs" />
                 Resume
               </a>
-              <a
-                href={socialLinks[1].url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-md bg-accent px-6 py-3 font-medium text-2xl text-black shadow border border-foreground transition-colors hover:bg-alternate"
-              >
-                <FontAwesomeIcon icon={faLinkedin} className="text-xs" />
-                LinkedIn
-              </a>
-              <a
-                href={socialLinks[0].url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-md bg-accent px-6 py-3 font-medium text-2xl text-black shadow border border-foreground transition-colors hover:bg-alternate"
-              >
-                <FontAwesomeIcon icon={faGithub} className="text-xs" />
-                GitHub
-              </a>
+               <a
+                 href={socialLinks[1].url}
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className="inline-flex items-center justify-center gap-2 rounded-md bg-accent px-6 py-3 font-medium text-2xl text-black shadow border border-black transition-colors hover:bg-alternate"
+               >
+                 <FontAwesomeIcon icon={faLinkedin} className="text-xs" />
+                 LinkedIn
+               </a>
+               <a
+                 href={socialLinks[0].url}
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className="inline-flex items-center justify-center gap-2 rounded-md bg-accent px-6 py-3 font-medium text-2xl text-black shadow border border-black transition-colors hover:bg-alternate"
+               >
+                 <FontAwesomeIcon icon={faGithub} className="text-xs" />
+                 GitHub
+               </a>
             </div>
           </SectionContent>
         </Container>
