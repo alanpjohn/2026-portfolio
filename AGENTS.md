@@ -1,14 +1,15 @@
 # AGENTS.md - Portfolio Website Development Guidelines
 
 ## Project Overview
-Next.js 15.5.9 + React 19.1.4 + TypeScript 5.9.3 + Tailwind CSS 4.1.18
-- Static home page + ISR for blog/work pages (1-day revalidation)
-- Velite content engine with markdown (blog) and YAML (work items: projects + experiences)
+Next.js 16.1.4 + React 19.2.3 + TypeScript 5.9.3 + Tailwind CSS 4.1.18
+- Static export with Cloudflare Pages deployment
+- Velite content engine with markdown (blog) and YAML (work items)
+- Sharp-based build-time image optimization (WebP/AVIF/JPEG variants)
+- CustomImage component with blur placeholders and loading states
 - Automatic OG image generation using Satori + Resvg (1200x630 PNGs)
 - Framer Motion animations with accessibility support (reduced motion)
-- Deployment via Cloudflare Workers with OpenNext.js
-- Strict TypeScript with path mapping (`@/*`) and custom Velite-generated types
-- **No testing framework** - focus on manual testing and type safety
+- Strict TypeScript with path mapping (`@/*`) and Velite-generated types
+- No testing framework - focus on manual testing and type safety
 
 ## Commands
 
@@ -17,11 +18,12 @@ Next.js 15.5.9 + React 19.1.4 + TypeScript 5.9.3 + Tailwind CSS 4.1.18
 bun run dev              # Start dev server with Velite build + Turbopack
 next dev --turbopack     # Dev server without Velite (if content built)
 bun run velite           # Build content only (regenerates types and OG images)
+bun run optimize-images  # Optimize images with Sharp (generates variants + blur data)
 ```
 
 ### Build & Quality
 ```bash
-bun run build            # Full production build (includes content + OG images)
+bun run build            # Full production build (optimize images + content + OG images)
 bun run lint             # ESLint + Next.js rules (core-web-vitals + TypeScript)
 bunx tsc --noEmit        # Type check only (strict mode enabled)
 bun run velite && bun run lint && bunx tsc --noEmit && bun run build  # Full check
@@ -36,12 +38,14 @@ bun run velite && bun run lint && bunx tsc --noEmit && bun run build  # Full che
 # - Browser testing of UI components and interactions
 # - TypeScript compilation for type errors (`bunx tsc --noEmit`)
 # - Velite content processing validation (`bun run velite`)
+# - Image optimization validation (`bun run optimize-images`)
 # - Build process verification (`bun run build`)
 # - Content sync operations testing (`bun run content:*`)
 # - Cross-browser compatibility testing
 # - Mobile responsiveness testing
 # - Accessibility testing with screen readers
 # - Animation testing with reduced motion enabled
+# - Image loading testing (blur placeholders, format fallbacks)
 
 # Note: There are no commands for running individual tests
 # as no testing framework is configured. Use the commands above
@@ -58,10 +62,7 @@ bun run content:full      # Restore then backup (development sync)
 
 ### Deployment
 ```bash
-bun run deploy           # Deploy to Cloudflare Workers
-bun run preview          # Preview deployment locally
-bun run upload           # Upload assets only
-bun run cf-typegen       # Generate Cloudflare environment types
+bun run deploy:pages      # Deploy to Cloudflare Pages (includes optimization)
 ```
 
 ## Code Style Guidelines
@@ -102,6 +103,7 @@ bun run cf-typegen       # Generate Cloudflare environment types
 - Hooks: camelCase with `use` prefix (`useActiveSection`, `useTheme`)
 - Animation configs: camelCase with `.animations.ts` suffix
 - Utility functions: camelCase (`formatDate`, `slugify`)
+- Cache files: lowercase with `.json` extension (`.cache/image-optimization.json`)
 
 ### Component Patterns
 - Use `'use client'` directive sparingly; prefer server components
@@ -109,9 +111,17 @@ bun run cf-typegen       # Generate Cloudflare environment types
 - Extract animation variants to separate config files
 - Use semantic HTML and ARIA attributes for accessibility
 - Prefer functional components with hooks over class components
-- Use Next.js 15 App Router with server components by default
-- Leverage ISR for dynamic content (1-day revalidation)
+- Use Next.js 16 App Router with server components by default
+- Leverage static export for optimal performance
 - Theme defaults to dark mode with system preference support
+
+### Image Optimization
+- Use `CustomImage` component instead of Next.js Image (handles optimization, loading, remotes)
+- Local images: Automatic WebP/AVIF/JPEG variants with blur placeholders
+- Remote images: Custom loading div with gradient background
+- Build-time optimization via `bun run optimize-images`
+- Aspect ratios maintained via width/height props
+- Blur data auto-generated as base64 URLs
 
 ### Animation Guidelines
 - Use Framer Motion for all animations with `useReducedMotion` support
@@ -124,8 +134,8 @@ bun run cf-typegen       # Generate Cloudflare environment types
 - Use App Router with server components by default
 - Add `'use client'` directive only when necessary (hooks, browser APIs, interactivity)
 - Set `metadataBase` in root layout for proper social media URL resolution
-- Leverage ISR for dynamic content with appropriate revalidation times
-- Use `next/image` for optimized images with proper sizing
+- Static export with `output: "export"` for Pages deployment
+- Use `CustomImage` for optimized images with proper sizing
 - Implement proper loading states for dynamic content
 - Use `next/link` for client-side navigation with prefetching
 - Include Open Graph and Twitter metadata for social sharing
@@ -144,13 +154,15 @@ bun run cf-typegen       # Generate Cloudflare environment types
 - Handle loading states appropriately in async operations
 - Log errors with context but never expose sensitive information
 - Use proper error boundaries for React components
+- Cache operations gracefully handle failures
 
 ### Performance & Security
-- Use Next.js Image component (via CustomImage) for optimized images
+- Use CustomImage for optimized images (Sharp-generated variants)
 - Implement proper code splitting for large components
 - Memoize expensive calculations with `useMemo`
 - Never commit secrets or API keys to version control
 - Use environment variables for sensitive configuration
+- Cache build artifacts to speed up development
 
 ### Accessibility (A11y)
 - Use semantic HTML elements (`<main>`, `<section>`, `<article>`)
@@ -191,16 +203,6 @@ items:
     company: "TechCorp AI"
     role: "Senior Backend Engineer"
     date: "2022-03-01"
-
-  - id: "ecommerce-platform"
-    title: "E-commerce Platform"
-    type: "project"
-    description: "Full-stack e-commerce solution..."
-    tags: ["Next.js", "TypeScript", "Prisma"]
-    featured: true
-    url: "https://example.com"
-    image: "/images/project.jpg"
-    date: "2024-01-15"
 ```
 
 ## File Organization
@@ -214,22 +216,32 @@ src/
 ├── app/             # Next.js app router (kebab-case routes)
 ├── components/      # Reusable components
 │   ├── layout/      # Layout components (Container, Section)
-│   ├── ui/          # UI primitives
+│   ├── ui/          # UI primitives (CustomImage)
 │   ├── home/        # Page-specific components
 │   └── work/        # Work-related components
 ├── hooks/           # Custom React hooks
 ├── lib/             # Business logic
 │   ├── api/         # API utilities
+│   ├── seo/         # OG image generation + caching
 │   └── utils/       # Helper functions
 ├── types/           # TypeScript definitions
 └── data/            # Static configuration
+
+scripts/             # Build scripts (optimize-images.ts)
+.cache/              # Non-git cache files
+public/
+├── images/          # Source images
+└── static/
+    ├── images/optimized/  # Generated image variants
+    └── og/                # Generated OG images
 ```
 
 ## Git Workflow
 - Use conventional commit format (`feat:`, `fix:`, `docs:`, `refactor:`)
-- Run `bun run velite && bun run lint && bunx tsc --noEmit && bun run build` before committing
+- Run `bun run optimize-images && bun run velite && bun run lint && bunx tsc --noEmit && bun run build` before committing
 - Keep content and code changes separate
 - Use descriptive commit messages focusing on "why" not "what"
+- Sign commits with `-s` flag
 
 ## Content Management
 - Add blog posts: Create `.md` in `content/blog/`, run `bun run velite`
@@ -237,51 +249,17 @@ src/
 - Velite regenerates types and OG images automatically on build
 - Content is processed at build time for optimal performance
 - OG images are generated in `public/static/og/` (1200x630 PNG format)
+- Images optimized via Sharp in `public/static/images/optimized/`
 
-## Content Sync Strategy
-
-**Principle**: Local content directory is the source of truth. R2 serves as a backup/restore mechanism.
-
-**Operations**:
-- `content:backup`: Upload all local content to R2
-- `content:restore`: Download missing files from R2
-- `content:ensure`: Check and restore missing content
-- `content:full`: Restore then backup (development sync)
-
-**Guarantees**:
-- Local content is never older than R2 (user-provided)
-- No bidirectional sync - simple one-way backup
-- No conflict resolution - local always wins
-- Automatic restore when content directory is empty
-
-**Usage**:
-```bash
-# Development backup
-bun run content:backup
-
-# Restore after fresh clone
-bun run content:ensure
-```
-
-## OG Image Generation
-
+## Image Optimization
 **Architecture:**
-- Uses Satori for SVG generation from React components
-- Converts SVG to PNG using Resvg (1200x630 format)
-- Integrated with Velite's `complete` hook for automatic generation
-- Fonts: Clash Display (headings) and Archivo (body) from `public/assets/fonts/`
+- Sharp processes `public/images/` at build time
+- Generates WebP (80%), AVIF (lossless), JPEG (80%) at 320px, 640px, 768px, original widths
+- Blur placeholders: 10px blurred base64 JPEG
+- CustomImage uses `<picture>` for format negotiation, fallback to original
+- Remote images (socialify.git.ci) use custom loading div
 
-**Generated Images:**
-- `default.png` - Home page, work page, blog index (shows "Alan John" branding)
-- `{slug}.png` - Individual blog posts (shows title, excerpt, tags, date, "AJ" footer)
-
-**Design System:**
-- Dark theme: `#0d0e10` background, `#f0ede6` text, `#2cb67d` accent, `#ffd700` gold
-- Left-aligned content with vertical centering
-- Blog posts include excerpt below title
-- Subtle "AJ" branding in bottom-right corner
-
-**File Location:** `src/lib/seo/og-images.tsx`
+**File Location:** `scripts/optimize-images.ts`, `src/components/ui/Image.tsx`
 
 ## AI Assistant Guidelines
 
@@ -298,7 +276,10 @@ No Copilot instructions found in `.github/copilot-instructions.md`
 - Implement proper error handling and loading states
 - Use semantic HTML and accessibility best practices
 - Follow the established import organization and naming conventions
+- Use CustomImage for all image components
+- Run optimization scripts before builds
+- Cache results to improve build performance
 
 ---
-Last Updated: January 11, 2026</content>
-<parameter name="filePath">/home/alan/Documents/webd/2026-portfolio/AGENTS.md
+Last Updated: January 23, 2026</content>
+<parameter name="filePath">AGENTS.md
