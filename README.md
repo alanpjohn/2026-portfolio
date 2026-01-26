@@ -1,47 +1,49 @@
-# OpenNext Starter
+# Portfolio
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+> Built by Opencode
 
-## Getting Started
+A modern, purely static portfolio website built with Next.js 16 and deployed on Cloudflare Pages. This is a follow-up to my old [next-notion-portfolio](https://github.com/alanpjohn/next-notion-portfolio), now with a more optimized architecture and better performance. I tried setting up with opennext and cloudflare workers first but realised I dont need it.
 
-Read the documentation at https://opennext.js.org/cloudflare.
+## Deployment Choice
 
-## Develop
+**Cloudflare Pages over Vercel**: This portfolio is deployed on Cloudflare Pages for better global CDN performance, built-in analytics, and cost efficiency. The static export approach ensures fast loading times worldwide.
 
-Run the Next.js development server:
+## Content Architecture
+
+**Static Generation over ISR**: 
+- Content is built at compile time using Velite, processing Markdown (blog) and YAML (work items) into optimized static assets
+- ISR (Incremental Static Regeneration) was not chosen due to the low frequency of portfolio updates
+- Static generation provides better performance and simpler hosting.
+
+**Content Management**:
+- Content is managed locally in the `content/` directory (not pushed to GitHub)
+- Automatic backup to Cloudflare R2 storage via `bun run content:backup`
+- Content sync commands ensure data safety and availability across development environments
+
+## Key Features
+
+- **Modern Stack**: Next.js 16.1.4 + React 19.2.3 + TypeScript 5.9.3 + Tailwind CSS 4.1.18
+- **Content Engine**: Velite for processing Markdown and YAML content with type safety
+- **Image Optimization**: For non blog pages, Sharp-based build-time optimization generating WebP/AVIF/JPEG variants with blur placeholders. For blog content pages, a client side optimiser to lazy load images without using Next/Image due to lack of react hydration of blog content generated pages.
+- **OG Images**: Automatic social media image generation using Satori + Resvg
+- **Animations**: Framer Motion with accessibility support (reduced motion)
+- **Static Export**: Optimized for Cloudflare Pages deployment
+- **Type Safety**: Strict TypeScript with Velite-generated types
+
+## Development
 
 ```bash
-npm run dev
-# or similar package manager command
+bun run dev              # Start development server
+bun run build            # Production build with optimization
+bun run lint             # ESLint + type checking
+bun run optimize-images  # Image optimization pipeline
+bun run velite           # Content processing and OG image generation
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project Structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `src/` - React components and pages
+- `scripts/` - Build automation (image optimization)
+- `public/static/` - Generated optimized images and OG images
 
-## Preview
-
-Preview the application locally on the Cloudflare runtime:
-
-```bash
-npm run preview
-# or similar package manager command
-```
-
-## Deploy
-
-Deploy the application to Cloudflare:
-
-```bash
-npm run deploy
-# or similar package manager command
-```
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The portfolio functions as a static site with content processed at build time, ensuring optimal performance and reliability.
