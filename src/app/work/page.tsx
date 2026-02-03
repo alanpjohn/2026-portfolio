@@ -53,30 +53,30 @@ export default function WorkPage() {
 
             {/* Action Buttons */}
             <div className="mt-12 flex flex-col gap-4 sm:flex-row sm:gap-6">
-              <a
-                href={siteConfig.resumeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-md bg-accent px-6 py-3 font-medium text-2xl text-black shadow border border-black transition-colors hover:bg-alternate"
-              >
+               <a
+                 href={siteConfig.resumeUrl}
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 className="btn-polygon inline-flex items-center justify-center gap-2 text-2xl"
+               >
                 <FontAwesomeIcon icon={faDownload} className="text-xs" />
                 Resume
               </a>
-               <a
-                 href={socialLinks[1].url}
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 className="inline-flex items-center justify-center gap-2 rounded-md bg-accent px-6 py-3 font-medium text-2xl text-black shadow border border-black transition-colors hover:bg-alternate"
-               >
+                <a
+                  href={socialLinks[1].url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-polygon inline-flex items-center justify-center gap-2 text-2xl"
+                >
                  <FontAwesomeIcon icon={faLinkedin} className="text-xs" />
                  LinkedIn
                </a>
-               <a
-                 href={socialLinks[0].url}
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 className="inline-flex items-center justify-center gap-2 rounded-md bg-accent px-6 py-3 font-medium text-2xl text-black shadow border border-black transition-colors hover:bg-alternate"
-               >
+                <a
+                  href={socialLinks[0].url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-polygon inline-flex items-center justify-center gap-2 text-2xl"
+                >
                  <FontAwesomeIcon icon={faGithub} className="text-xs" />
                  GitHub
                </a>

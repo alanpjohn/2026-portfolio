@@ -57,7 +57,7 @@ export function WorkCard({ item }: WorkCardProps) {
               href={item.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-md bg-accent px-6 py-2 text-sm font-medium text-black shadow border border-black transition-colors hover:bg-alternate uppercase self-start"
+               className="btn-polygon-sm btn-polygon inline-flex items-center justify-center self-start"
             >
               View Project
             </a>

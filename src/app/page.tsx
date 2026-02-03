@@ -51,10 +51,10 @@ export default function Home() {
       <Section key="hero" id="hero" fullHeight>
         <Container fullWidth>
           <SectionContent className="flex flex-col items-center justify-center text-center">
-            <h1 className="text-8xl font-logo tracking-normal crt-halo-subtle sm:text-9xl md:text-[12rem] lg:text-[14rem] leading-none">
+            <h1 className="text-6xl font-logo tracking-normal crt-halo-subtle sm:text-8xl md:text-9xl lg:text-[12rem] leading-none">
               ALAN JOHN
             </h1>
-            <p className="mt-8 text-2xl font-logo text-muted-foreground crt-halo-subtle sm:text-3xl md:text-4xl">
+            <p className="mt-8 text-xl font-logo text-muted-foreground crt-halo-subtle sm:text-2xl md:text-3xl">
               Software Engineer
             </p>
 
@@ -78,7 +78,7 @@ export default function Home() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    className="inline-flex items-center justify-center gap-2 rounded-md bg-accent px-6 py-3 font-medium text-2xl text-black shadow border border-black transition-colors hover:bg-alternate"
+                    className="btn-polygon inline-flex items-center justify-center gap-2 text-2xl"
                   >
                     {getIcon() && (
                       <FontAwesomeIcon icon={getIcon()!} className="text-xl" />
@@ -104,10 +104,10 @@ export default function Home() {
           <SectionContent>
             <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
               <div className="flex-1 space-y-6">
-                <h2 className="text-3xl font-medium tracking-tighter sm:text-4xl">
+                <h2 className="text-4xl font-medium tracking-tighter sm:text-5xl">
                   About Me
                 </h2>
-                <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
+                <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
                   Twenty Six Year Backend Engineer from Kerala, India
                   specialising in AI applications and cloud computing with
                   experience in research and early stage SaaS startups.
@@ -133,11 +133,11 @@ export default function Home() {
       <Section key="contact" id="contact" fullHeight>
         <Container fullWidth>
           <SectionContent className="flex flex-col items-center justify-center text-center">
-            <h2 className="text-3xl font-medium tracking-tighter sm:text-4xl md:text-5xl mb-8">
+            <h2 className="text-4xl font-medium tracking-tighter sm:text-5xl mb-8">
               Contact
             </h2>
             <div className="mb-12 max-w-2xl">
-              <p className="text-lg text-muted-foreground leading-relaxed">
+              <p className="text-xl text-muted-foreground leading-relaxed">
                 I&apos;m always open to discussing new opportunities and
                 interesting projects. Whether you&apos;re looking for a backend
                 engineer to join your team or have an exciting project we could

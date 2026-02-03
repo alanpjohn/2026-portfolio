@@ -201,20 +201,60 @@
 
     @keyframes textShadowSubtle {
         /* Halo bleed for hero text (light mode) */
-        0% {text-shadow: 1px 0 2px rgba(42, 183, 125, 0.4), -1px 0 2px rgba(126, 30, 251, 0.35);}
-        25% {text-shadow: 2px 0 3px rgba(42, 183, 125, 0.4), -2px 0 3px rgba(126, 30, 251, 0.35);}
-        50% {text-shadow: 0.5px 0 2px rgba(42, 183, 125, 0.4), -0.5px 0 2px rgba(126, 30, 251, 0.35);}
-        75% {text-shadow: 1.5px 0 2.5px rgba(42, 183, 125, 0.4), -1.5px 0 2.5px rgba(126, 30, 251, 0.35);}
-        100% {text-shadow: 1.8px 0 3px rgba(42, 183, 125, 0.4), -1.8px 0 3px rgba(126, 30, 251, 0.35);}
+        0% {
+            text-shadow:
+                1px 0 2px rgba(42, 183, 125, 0.4),
+                -1px 0 2px rgba(126, 30, 251, 0.35);
+        }
+        25% {
+            text-shadow:
+                2px 0 3px rgba(42, 183, 125, 0.4),
+                -2px 0 3px rgba(126, 30, 251, 0.35);
+        }
+        50% {
+            text-shadow:
+                0.5px 0 2px rgba(42, 183, 125, 0.4),
+                -0.5px 0 2px rgba(126, 30, 251, 0.35);
+        }
+        75% {
+            text-shadow:
+                1.5px 0 2.5px rgba(42, 183, 125, 0.4),
+                -1.5px 0 2.5px rgba(126, 30, 251, 0.35);
+        }
+        100% {
+            text-shadow:
+                1.8px 0 3px rgba(42, 183, 125, 0.4),
+                -1.8px 0 3px rgba(126, 30, 251, 0.35);
+        }
     }
 
     @keyframes textShadowSubtleDark {
         /* Enhanced halo bleed for dark mode */
-        0% {text-shadow: 1.5px 0 3px rgba(42, 183, 125, 0.6), -1.5px 0 3px rgba(126, 30, 251, 0.5);}
-        25% {text-shadow: 3px 0 4px rgba(42, 183, 125, 0.6), -3px 0 4px rgba(126, 30, 251, 0.5);}
-        50% {text-shadow: 0.8px 0 3px rgba(42, 183, 125, 0.6), -0.8px 0 3px rgba(126, 30, 251, 0.5);}
-        75% {text-shadow: 2.2px 0 3.5px rgba(42, 183, 125, 0.6), -2.2px 0 3.5px rgba(126, 30, 251, 0.5);}
-        100% {text-shadow: 2.5px 0 4px rgba(42, 183, 125, 0.6), -2.5px 0 4px rgba(126, 30, 251, 0.5);}
+        0% {
+            text-shadow:
+                1.5px 0 3px rgba(42, 183, 125, 0.6),
+                -1.5px 0 3px rgba(126, 30, 251, 0.5);
+        }
+        25% {
+            text-shadow:
+                3px 0 4px rgba(42, 183, 125, 0.6),
+                -3px 0 4px rgba(126, 30, 251, 0.5);
+        }
+        50% {
+            text-shadow:
+                0.8px 0 3px rgba(42, 183, 125, 0.6),
+                -0.8px 0 3px rgba(126, 30, 251, 0.5);
+        }
+        75% {
+            text-shadow:
+                2.2px 0 3.5px rgba(42, 183, 125, 0.6),
+                -2.2px 0 3.5px rgba(126, 30, 251, 0.5);
+        }
+        100% {
+            text-shadow:
+                2.5px 0 4px rgba(42, 183, 125, 0.6),
+                -2.5px 0 4px rgba(126, 30, 251, 0.5);
+        }
     }
 
     /* Respect reduced motion preferences */
@@ -222,6 +262,53 @@
         .crt-halo-subtle {
             animation: none;
         }
+    }
+
+    /* Polygon Button Styles */
+    .btn-polygon {
+        display: inline-block;
+        padding: 1rem 2.5rem;
+        background-color: var(--foreground);
+        color: var(--background);
+        text-decoration: none;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        clip-path: polygon(
+            10px 0,
+            100% 0,
+            100% calc(100% - 20px),
+            calc(100% - 20px) 100%,
+            0 100%,
+            0 10px
+        );
+        transition: all 0.3s ease;
+        border: 2px solid var(--foreground);
+        font-family: var(--font-nippo, system-ui, sans-serif);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-polygon:hover {
+        background-color: var(--accent);
+        color: var(--foreground);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        border-color: hsl(var(--foreground) / 0.8);
+    }
+
+    .dark .btn-polygon {
+        box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+    }
+
+    .dark .btn-polygon:hover {
+        box-shadow: 0 5px 20px rgba(255, 255, 255, 0.15);
+        background-color: var(--accent);
+    }
+
+    /* Small polygon button variant */
+    .btn-polygon-sm {
+        padding: 0.5rem 1.5rem;
+        font-size: 0.875rem;
     }
 
     /* Font application */
