@@ -13,7 +13,7 @@ export function BlogPostContent({ content }: BlogPostContentProps) {
     }, []);
 
     return (
-        <div className="prose prose-gray max-w-none dark:prose-invert">
+        <div data-pagefind-body data-pagefind-filter="type:blog" className="prose prose-gray max-w-none dark:prose-invert">
             <div
                 dangerouslySetInnerHTML={{ __html: content }}
                 suppressHydrationWarning

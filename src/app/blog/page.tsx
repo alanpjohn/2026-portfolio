@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Container } from "@/components/layout/Container";
+import { BlogSearchBar } from "@/components/blog/BlogSearchBar";
 import { getPaginatedBlogPosts } from "@/lib/api/blog";
 import { formatDate } from "@/lib/utils/helpers";
 import { seoConfig } from "@/lib/seo/config";
@@ -45,7 +46,10 @@ export default async function BlogPage({
   return (
     <Container className="py-12">
       <div className="">
-        <h1 className="mb-8 text-4xl font-semibold tracking-tighter">Blog</h1>
+        <div className="mb-8 flex flex-col gap-4">
+          <h1 className="text-4xl font-semibold tracking-tighter">Blog</h1>
+          <BlogSearchBar />
+        </div>
 
         <div className="grid gap-8">
           {posts.map((post) => (

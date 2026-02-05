@@ -4,8 +4,8 @@
     "private": true,
     "scripts": {
         "dev": "next dev --turbopack",
-        "build": "bun run optimize-images && velite && next build",
-        "build:audit": "bun run optimize-images && velite && INCLUDE_ALL=true next build",
+        "build": "bun run optimize-images && velite && next build && pagefind --site out --glob \"blog/**/*.html\"",
+        "build:audit": "bun run optimize-images && velite && INCLUDE_ALL=true next build && pagefind --site out --glob \"blog/**/*.html\"",
         "start": "bunx serve@latest out",
         "lint": "eslint ./src/",
         "velite": "velite",
@@ -13,7 +13,7 @@
         "content:backup": "bunx tsx scripts/sync-content.ts backup",
         "content:restore": "bunx tsx scripts/sync-content.ts restore",
         "content:ensure": "bunx tsx scripts/sync-content.ts ensure",
-        "deploy:pages": "bun run optimize-images && velite && next build && wrangler pages deploy ./out --project-name=2026-portfolio-static",
+        "deploy:pages": "bun run optimize-images && velite && next build && pagefind --site out --glob \"blog/**/*.html\" && wrangler pages deploy ./out --project-name=2026-portfolio-static",
         "audit:lighthouse": "lhci autorun --config=.lighthouserc.js"
     },
     "dependencies": {
@@ -45,6 +45,7 @@
         "@types/unist": "^3.0.3",
         "eslint": "^9.39.2",
         "eslint-config-next": "^16.1.6",
+        "pagefind": "^1.4.0",
         "tailwindcss": "^4.1.18",
         "typescript": "^5.9.3",
         "wrangler": "^4.62.0"

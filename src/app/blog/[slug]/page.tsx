@@ -67,7 +67,7 @@ export default async function BlogPostPage({
     }
 
     return (
-        <article>
+        <article >
             <Container className="py-12">
                 <div className="mx-auto max-w-4xl">
                     <Link
