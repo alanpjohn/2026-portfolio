@@ -123,7 +123,7 @@ export function Header() {
         <div className="flex items-center gap-3">
           <button
             type="button"
-            className="flex h-10 w-10 items-center justify-center bg-background text-foreground transition-colors hover:bg-accent hover:text-accent-foreground md:hidden"
+            className="flex h-10 w-10 items-center justify-center text-foreground transition-colors hover:text-accent md:hidden"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}
             aria-controls={MOBILE_MENU_ID}

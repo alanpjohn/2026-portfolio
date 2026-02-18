@@ -98,7 +98,7 @@ export default async function BlogPostPage({
                         </div>
                     </div>
 
-                    <BlogPostContent content={post.content} />
+                    <BlogPostContent content={post.content} tags={post.tags} date={post.date} />
                 </div>
             </Container>
         </article>

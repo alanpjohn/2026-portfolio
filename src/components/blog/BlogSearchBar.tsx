@@ -15,6 +15,8 @@ type PagefindResult = {
   title: string;
   excerpt: string;
   url: string;
+  date: Date;
+  score: number;
 };
 
 type PagefindSearchResult = {
@@ -37,6 +39,32 @@ type PagefindModule = {
 };
 
 const RESULT_LIMIT = 6;
+const RECENCY_DECAY_DAYS = 30;
+const RELEVANCE_WEIGHT = 0.7;
+const RECENCY_WEIGHT = 0.3;
+
+function calculateRecencyScore(date: Date): number {
+  const daysAgo = (Date.now() - date.getTime()) / (1000 * 60 * 60 * 24);
+  return Math.exp(-daysAgo / RECENCY_DECAY_DAYS);
+}
+
+function calculateHybridScore(relevanceScore: number, date: Date): number {
+  const recencyScore = calculateRecencyScore(date);
+  return (relevanceScore * RELEVANCE_WEIGHT) + (recencyScore * RECENCY_WEIGHT);
+}
+
+function extractDateFromUrl(url: string): Date | null {
+  const match = url.match(/\/blog\/([\w-]+)/);
+  if (!match) return null;
+  
+  const slug = match[1];
+  const dateMatch = slug.match(/(\d{4})-(\d{2})-(\d{2})/);
+  if (dateMatch) {
+    return new Date(`${dateMatch[1]}-${dateMatch[2]}-${dateMatch[3]}`);
+  }
+  
+  return null;
+}
 
 export function BlogSearchBar() {
   const [query, setQuery] = useState('');
@@ -89,21 +117,39 @@ export function BlogSearchBar() {
     const timeout = setTimeout(() => {
       setLoading(true);
       pagefindRef.current
-        ?.search(trimmedQuery, { filter: { type: 'blog' }, limit: 12 })
+        ?.search(trimmedQuery, { filter: { type: 'blog' }, limit: 20 })
         .then(async (payload) => {
           const searchResults = payload.results ?? [];
           const mappedResults = await Promise.all(
-            searchResults.map(async (result: PagefindSearchResult) => {
+            searchResults.map(async (result: PagefindSearchResult, index: number) => {
               const data = await result.data();
+              
+              // Calculate relevance score based on position (1.0 for first, decreasing for lower)
+              const relevanceScore = 1.0 - (index * 0.05);
+              
+              // Try to extract date from URL or meta
+              let postDate = extractDateFromUrl(data.url);
+              if (!postDate) {
+                // Fallback: assume recent post if date can't be extracted
+                postDate = new Date();
+              }
+              
+              const hybridScore = calculateHybridScore(relevanceScore, postDate);
+              
               return {
                 id: result.id,
                 title: data.meta?.title ?? 'Untitled post',
                 excerpt: data.excerpt ?? '',
                 url: data.url,
+                date: postDate,
+                score: hybridScore,
               };
             }),
           );
-          setResults(mappedResults);
+          
+          // Sort by hybrid score (higher is better)
+          const sortedResults = mappedResults.sort((a, b) => b.score - a.score);
+          setResults(sortedResults);
         })
         .catch(() => {
           setResults([]);
