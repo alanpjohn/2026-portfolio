@@ -120,10 +120,21 @@
 
     .prose blockquote {
         margin: 1.5rem 0;
-        padding: 0.5rem 1rem;
-        border-left: 4px solid hsl(var(--foreground) / 0.1);
-        background-color: hsl(var(--foreground) / 0.02);
-        border-radius: 0.25rem;
+        padding: 1rem 1.25rem;
+        border-left: 4px solid hsl(var(--accent));
+        background-color: hsl(var(--accent) / 0.08);
+        border-radius: 0.375rem;
+        font-style: italic;
+        color: hsl(var(--foreground) / 0.9);
+    }
+
+    .prose blockquote p {
+        margin-bottom: 0;
+        font-style: italic;
+    }
+
+    .prose blockquote p:last-child {
+        margin-bottom: 0;
     }
 
     .prose hr {

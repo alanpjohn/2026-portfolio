@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { BlogSearchBar } from "@/components/blog/BlogSearchBar";
-import { getPaginatedBlogPosts } from "@/lib/api/blog";
+import { BlogStats } from "@/components/blog/BlogStats";
+import { getPaginatedBlogPosts, getAllBlogPosts } from "@/lib/api/blog";
 import { formatDate } from "@/lib/utils/helpers";
 import { seoConfig } from "@/lib/seo/config";
 import type { Metadata } from "next";
@@ -34,77 +35,82 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogPage({
-  searchParams,
+    searchParams,
 }: {
-  searchParams: Promise<{ page?: string }>;
+    searchParams: Promise<{ page?: string }>;
 }) {
-  const { page } = await searchParams;
-  const currentPage = Number(page) || 1;
-  const { posts, totalPages, hasPrev, hasNext } =
-    getPaginatedBlogPosts(currentPage);
+    const { page } = await searchParams;
+    const currentPage = Number(page) || 1;
+    const { posts, totalPages, hasPrev, hasNext } =
+        getPaginatedBlogPosts(currentPage);
+    const allPosts = getAllBlogPosts();
 
-  return (
-    <Container className="py-12">
-      <div className="">
-        <div className="mb-8 flex flex-col gap-4">
-          <h1 className="text-4xl font-semibold tracking-tighter">Blog</h1>
-          <BlogSearchBar />
-        </div>
-
-        <div className="grid gap-8">
-          {posts.map((post) => (
-            <Link key={post.slug} href={`/blog/${post.slug}`}>
-              <article className="group rounded-lg border bg-card p-6 text-card-foreground shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer">
-                <div className="flex flex-col space-y-2">
-                  <h2 className="text-2xl font-medium leading-tight link-foreground group-hover:text-accent transition-colors duration-200">
-                    {post.title}
-                  </h2>
-                  <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                    <time dateTime={post.date.toISOString()}>
-                      {formatDate(post.date)}
-                    </time>
-                  </div>
-                  <p className="mt-2 text-muted-foreground">{post.excerpt}</p>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {post.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-md bg-accent px-2 py-1 text-xs text-black"
-                      >
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
+    return (
+        <Container className="py-12">
+            <div className="">
+                <div className="mb-8 flex flex-col gap-4">
+                    <h1 className="text-4xl font-semibold tracking-tighter">Blog</h1>
+                    <p className="italic text-muted-foreground">
+                        Reviving this blog after a while and holding myself to write atleast once a month.
+                    </p>
+                    <BlogStats posts={allPosts} />
+                    <BlogSearchBar />
                 </div>
-              </article>
-            </Link>
-          ))}
-        </div>
 
-        {totalPages > 1 && (
-          <div className="mt-12 flex items-center justify-center gap-4">
-            {hasPrev && (
-              <Link
-                href={`/blog?page=${currentPage - 1}`}
-                className="inline-flex items-center justify-center rounded-md bg-accent px-4 py-2 text-sm font-medium text-black shadow border border-foreground transition-colors hover:bg-alternate"
-              >
-                Previous
-              </Link>
-            )}
-            <span className="text-sm text-muted-foreground">
-              Page {currentPage} of {totalPages}
-            </span>
-            {hasNext && (
-              <Link
-                href={`/blog?page=${currentPage + 1}`}
-                className="inline-flex items-center justify-center rounded-md bg-accent px-4 py-2 text-sm font-medium text-black shadow border border-foreground transition-colors hover:bg-alternate"
-              >
-                Next
-              </Link>
-            )}
-          </div>
-        )}
-      </div>
-    </Container>
-  );
+                <div className="grid gap-8">
+                    {posts.map((post) => (
+                        <Link key={post.slug} href={`/blog/${post.slug}`}>
+                            <article className="group rounded-lg border bg-card p-6 text-card-foreground shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer">
+                                <div className="flex flex-col space-y-2">
+                                    <h2 className="text-2xl font-medium leading-tight link-foreground group-hover:text-accent transition-colors duration-200">
+                                        {post.title}
+                                    </h2>
+                                    <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                                        <time dateTime={post.date.toISOString()}>
+                                            {formatDate(post.date)}
+                                        </time>
+                                    </div>
+                                    <p className="mt-2 text-muted-foreground">{post.excerpt}</p>
+                                    <div className="mt-4 flex flex-wrap gap-2">
+                                        {post.tags.map((tag) => (
+                                            <span
+                                                key={tag}
+                                                className="rounded-md bg-accent px-2 py-1 text-xs text-black"
+                                            >
+                                                #{tag}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            </article>
+                        </Link>
+                    ))}
+                </div>
+
+                {totalPages > 1 && (
+                    <div className="mt-12 flex items-center justify-center gap-4">
+                        {hasPrev && (
+                            <Link
+                                href={`/blog?page=${currentPage - 1}`}
+                                className="inline-flex items-center justify-center rounded-md bg-accent px-4 py-2 text-sm font-medium text-black shadow border border-foreground transition-colors hover:bg-alternate"
+                            >
+                                Previous
+                            </Link>
+                        )}
+                        <span className="text-sm text-muted-foreground">
+                            Page {currentPage} of {totalPages}
+                        </span>
+                        {hasNext && (
+                            <Link
+                                href={`/blog?page=${currentPage + 1}`}
+                                className="inline-flex items-center justify-center rounded-md bg-accent px-4 py-2 text-sm font-medium text-black shadow border border-foreground transition-colors hover:bg-alternate"
+                            >
+                                Next
+                            </Link>
+                        )}
+                    </div>
+                )}
+            </div>
+        </Container>
+    );
 }
