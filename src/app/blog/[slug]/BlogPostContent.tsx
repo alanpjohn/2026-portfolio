@@ -44,15 +44,22 @@ export function BlogPostContent({ content, tags, date }: BlogPostContentProps) {
     }, [content]);
 
     const dateString = date.toISOString().split('T')[0];
-    const tagFilters = tags.map(tag => `tag:${tag}`).join(' ');
 
     return (
         <div 
             data-pagefind-body 
-            data-pagefind-filter={`type:blog ${tagFilters}`}
+            data-pagefind-filter="type:blog"
             data-pagefind-sort={`date:${dateString}`}
             className="prose prose-gray max-w-none dark:prose-invert"
         >
+            {/* Separate span elements for each tag filter - Pagefind requires individual attributes */}
+            {tags.map((tag) => (
+                <span
+                    key={tag}
+                    data-pagefind-filter={`tag:${tag}`}
+                    style={{ display: 'none' }}
+                />
+            ))}
             <div
                 ref={contentRef}
                 dangerouslySetInnerHTML={{ __html: content }}
