@@ -2,7 +2,7 @@ import { visit } from 'unist-util-visit'
 import { getPlaiceholder } from 'plaiceholder'
 import { promises as fs } from 'fs'
 import * as path from 'path'
-import { Element, Properties, Root } from 'hast'
+import { Element, Properties, Root, Parent } from 'hast'
 
 // Configuration for remote image processing
 const REMOTE_IMAGE_CONFIG = {
@@ -91,7 +91,7 @@ export function rehypeImageOptimization() {
   return async function transformer(tree: Root) {
     const imagePromises: Promise<void>[] = []
 
-    visit(tree, 'element', (node: Element) => {
+    visit(tree, 'element', (node: Element, index, parent) => {
       if (node.tagName === 'img') {
         const src = node.properties?.src as string
 
@@ -155,6 +155,26 @@ export function rehypeImageOptimization() {
 
               // Remove any existing children since img is self-closing
               node.children = []
+
+              // Wrap image in figure element if it has alt text
+              const altText = node.properties?.alt as string
+              if (altText && parent && typeof index === 'number') {
+                const figure: Element = {
+                  type: 'element',
+                  tagName: 'figure',
+                  properties: { class: 'velite-figure' },
+                  children: [
+                    node,
+                    {
+                      type: 'element',
+                      tagName: 'figcaption',
+                      properties: {},
+                      children: [{ type: 'text', value: altText }]
+                    }
+                  ]
+                }
+                ;(parent as Parent).children[index] = figure
+              }
             } catch (error) {
               const errorMessage = error instanceof Error ? error.message : String(error)
               console.warn(`Failed to process image ${src}: ${errorMessage}`)

@@ -2,6 +2,7 @@ import { defineConfig, s } from "velite";
 import rehypeHighlight from "rehype-highlight";
 import rehypeHighlightCodeLines from "rehype-highlight-code-lines";
 import { rehypeImageOptimization } from "./src/lib/content/rehype-images";
+import { rehypeTableWrapper } from "./src/lib/content/rehype-tables";
 import { execSync } from "child_process";
 import {
   generateBlogOGImage,
@@ -50,6 +51,7 @@ export default defineConfig({
               },
               rehypeHighlightCodeLines,
             ],
+            rehypeTableWrapper,
             rehypeImageOptimization,
           ],
         }),
