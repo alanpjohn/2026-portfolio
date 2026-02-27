@@ -1,5 +1,5 @@
-import Link from 'next/link'
-import { navigationLinks, socialLinks } from '@/data/config'
+import Link from "next/link";
+import { navigationLinks, socialLinks } from "@/data/config";
 
 export function Footer() {
   return (
@@ -12,7 +12,7 @@ export function Footer() {
               [ AJ ]
             </div>
             <div className="font-mono text-[10px] uppercase font-bold text-accent">
-              Software Engineer // V2.0
+              Software Engineer //
             </div>
           </div>
 
@@ -48,7 +48,8 @@ export function Footer() {
         {/* Copyright */}
         <div className="mt-12 pt-8 border-t-2 border-foreground/10 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="font-mono text-[10px] uppercase font-bold text-center md:text-left opacity-50">
-            Designed with Stitch, Built by Opencode, Deployed on Cloudflare. Less Bloat, More Performance.
+            Designed with Stitch, Built by Opencode, Deployed on Cloudflare.
+            Less Bloat, More Performance.
           </div>
           <div className="flex items-center gap-2 font-mono text-[10px] uppercase font-bold opacity-50">
             <span className="w-2 h-2 bg-accent rounded-full"></span>
@@ -57,5 +58,5 @@ export function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

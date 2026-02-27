@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faGithub,
   faLinkedin,
-  faTwitter,
+  faXTwitter,
 } from "@fortawesome/free-brands-svg-icons";
 import { faArrowLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import type { Metadata } from "next";
@@ -252,7 +252,7 @@ export default async function BlogPostPage({
                       rel="noopener noreferrer"
                       className="font-mono text-xs font-bold border-b-2 border-foreground hover:text-accent hover:border-accent transition-all uppercase"
                     >
-                      <FontAwesomeIcon icon={faTwitter} className="mr-1" />
+                      <FontAwesomeIcon icon={faXTwitter} className="mr-1" />
                       Share
                     </a>
                   </div>
