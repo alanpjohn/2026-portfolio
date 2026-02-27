@@ -3,6 +3,7 @@ export interface WorkItem {
   title: string;
   type: "project" | "experience";
   description: string;
+  bullets: string[];
   tags: string[];
   featured: boolean;
   url?: string;

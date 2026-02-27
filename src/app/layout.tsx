@@ -33,7 +33,7 @@ export default function RootLayout({
           <HighlightThemeProvider />
           <div className="relative min-h-screen bg-background">
             <Header />
-            <main className="pt-24">{children}</main>
+            <main className="pt-20">{children}</main>
             <Footer />
           </div>
         </ThemeProvider>

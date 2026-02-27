@@ -67,6 +67,7 @@ export default defineConfig({
             title: s.string(),
             type: s.enum(["project", "experience"]),
             description: s.string(),
+            bullets: s.array(s.string()).default([]),
             tags: s.array(s.string()),
             featured: s.boolean().default(false),
             url: s.string().optional(),

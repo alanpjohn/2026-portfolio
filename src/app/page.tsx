@@ -1,23 +1,10 @@
-import { CustomImage } from "@/components/ui/Image";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faGithub,
-  faDiscord,
-  faLinkedin,
-} from "@fortawesome/free-brands-svg-icons";
-import {
-  faEnvelope,
-  faBook,
-  faBriefcase,
-  faCamera,
-} from "@fortawesome/free-solid-svg-icons";
-import { Container } from "@/components/layout/Container";
-import { Section } from "@/components/layout/Section";
-import { SectionContent } from "@/components/layout/SectionContent";
-import { StackedSections } from "@/components/home/StackedSections";
-import { siteConfig, socialLinks, navigationLinks } from "@/data/config";
+import { faArrowUpRightFromSquare } from "@fortawesome/free-solid-svg-icons";
 import { seoConfig } from "@/lib/seo/config";
+import { AboutSection } from "@/components/home/AboutSection";
+import { ContactSection } from "@/components/home/ContactSection";
+import { StackMarquee } from "@/components/ui/Marquee";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -47,142 +34,129 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <StackedSections>
-      <Section key="hero" id="hero" fullHeight>
-        <Container fullWidth>
-          <SectionContent className="flex flex-col items-center justify-center text-center">
-            <h1 className="text-6xl font-logo tracking-normal crt-halo-subtle sm:text-8xl md:text-9xl lg:text-[12rem] leading-none">
-              ALAN JOHN
-            </h1>
-            <p className="mt-8 text-xl font-logo text-muted-foreground crt-halo-subtle sm:text-2xl md:text-3xl">
-              Software Engineer
-            </p>
+    <main className="bg-background">
+      {/* Hero Section */}
+      <section className="relative min-h-[60vh] flex flex-col items-center justify-center overflow-hidden border-b-4 border-foreground">
+        {/* Grid background */}
+        <div className="absolute inset-0 grid-bg" />
 
-            {/* Navigation Buttons */}
-            <div className="mt-12 flex flex-col gap-4 sm:flex-row sm:gap-6">
-              {navigationLinks.slice(1, 4).map((link) => {
-                const getIcon = () => {
-                  switch (link.href) {
-                    case "/blog":
-                      return faBook;
-                    case "/work":
-                      return faBriefcase;
-                    case "https://photos.alanjohn.dev":
-                      return faCamera;
-                    default:
-                      return null;
-                  }
-                };
+        {/* Main content */}
+        <div className="relative z-10 text-center px-4 mb-8">
+          <p className="font-mono text-accent font-bold uppercase tracking-[0.5em] mb-4 text-sm md:text-base">
+            Software Engineer
+          </p>
+          <h1 className="font-nippo text-[12vw] md:text-[10vw] font-bold uppercase leading-[0.85]">
+            ALAN
+            <br />
+            JOHN
+          </h1>
+        </div>
 
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="btn-polygon inline-flex items-center justify-center gap-2 text-2xl"
-                  >
-                    {getIcon() && (
-                      <FontAwesomeIcon icon={getIcon()!} className="text-xl" />
-                    )}
-                    {link.name}
-                  </Link>
-                );
-              })}
+        {/* Floating navigation cards - All screens */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden block">
+          {/* Projects Card */}
+          <Link
+            href="/work"
+            className="pointer-events-auto absolute top-[8%] md:top-[15%] left-[5%] brutalist-border bg-background p-4 md:p-6 brutalist-shadow-hover -rotate-6 group"
+          >
+            <div className="font-mono text-[10px] text-accent mb-1 font-bold uppercase tracking-tight">
+              {"// RECENT_WORKS"}
             </div>
-
-            {/* Scroll Indicator */}
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-              <p className="text-sm text-muted-foreground/60 animate-pulse">
-                scroll to know more
-              </p>
+            <div className="font-display text-xl md:text-2xl font-bold uppercase group-hover:text-accent transition-colors">
+              Projects
             </div>
-          </SectionContent>
-        </Container>
-      </Section>
+            <span className="absolute -top-3 -right-3 bg-foreground text-background p-1 text-xs">
+              <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+            </span>
+          </Link>
 
-      <Section key="about" id="about" fullHeight>
-        <Container fullWidth>
-          <SectionContent>
-            <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
-              <div className="flex-1 space-y-6">
-                <h2 className="text-4xl font-medium tracking-tighter sm:text-5xl">
-                  About Me
-                </h2>
-                <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
-                  Twenty Six Year Backend Engineer from Kerala, India
-                  specialising in AI applications and cloud computing with
-                  experience in research and early stage SaaS startups.
-                  Passionate about building scalable solutions that make a real
-                  impact.
-                </p>
-              </div>
-              <div className="flex-shrink-0">
-                <CustomImage
-                  src="/images/Alan.jpg"
-                  alt="Alan John"
-                  width={320}
-                  height={320}
-                  className="w-64 h-64 md:w-80 md:h-80 object-cover rounded-lg shadow-lg"
-                  priority={true}
-                />
-              </div>
+          {/* Blog Card */}
+          <Link
+            href="/blog"
+            className="pointer-events-auto absolute bottom-[20%] left-[3%] brutalist-border bg-accent text-foreground p-4 md:p-6 brutalist-shadow-hover rotate-3 group"
+          >
+            <div className="font-mono text-[10px] mb-1 font-bold uppercase tracking-tight">
+              {"// THOUGHT_LOG"}
             </div>
-          </SectionContent>
-        </Container>
-      </Section>
+            <div className="font-display text-xl md:text-2xl font-bold uppercase">
+              Blog
+            </div>
+            <span className="absolute -bottom-3 -right-3 bg-foreground text-background p-1 text-xs">
+              <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+            </span>
+          </Link>
 
-      <Section key="contact" id="contact" fullHeight>
-        <Container fullWidth>
-          <SectionContent className="flex flex-col items-center justify-center text-center">
-            <h2 className="text-4xl font-medium tracking-tighter sm:text-5xl mb-8">
+          {/* Contact Card */}
+          <Link
+            href="#contact"
+            className="pointer-events-auto absolute top-[10%] md:top-[20%] right-[5%] brutalist-border bg-foreground text-background p-4 md:p-6 brutalist-shadow-hover rotate-6 group"
+          >
+            <div className="font-mono text-[10px] text-accent mb-1 font-bold uppercase tracking-tight">
+              {"// GET_IN_TOUCH"}
+            </div>
+            <div className="font-display text-xl md:text-2xl font-bold uppercase group-hover:text-accent transition-colors">
               Contact
-            </h2>
-            <div className="mb-12 max-w-2xl">
-              <p className="text-xl text-muted-foreground leading-relaxed">
-                I&apos;m always open to discussing new opportunities and
-                interesting projects. Whether you&apos;re looking for a backend
-                engineer to join your team or have an exciting project we could
-                work together on, I&apos;d love to hear from you.
-              </p>
             </div>
-            <div className="flex gap-8 md:gap-12">
-              <a
-                href={socialLinks[0].url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-4xl md:text-6xl link-foreground link-dotted"
-                aria-label="GitHub"
-              >
-                <FontAwesomeIcon icon={faGithub} />
-              </a>
-              <a
-                href={socialLinks[1].url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-4xl md:text-6xl link-foreground link-dotted"
-                aria-label="LinkedIn"
-              >
-                <FontAwesomeIcon icon={faLinkedin} />
-              </a>
-              <a
-                href={socialLinks[2].url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-4xl md:text-6xl link-foreground link-dotted"
-                aria-label="Discord"
-              >
-                <FontAwesomeIcon icon={faDiscord} />
-              </a>
-              <a
-                href={`mailto:${siteConfig.email}`}
-                className="text-4xl md:text-6xl link-foreground link-dotted"
-                aria-label="Email"
-              >
-                <FontAwesomeIcon icon={faEnvelope} />
-              </a>
+            <span className="absolute -top-3 -left-3 bg-accent text-foreground p-1 text-xs">
+              <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+            </span>
+          </Link>
+
+          {/* Photos Card */}
+          <Link
+            href="/photos"
+            className="pointer-events-auto absolute bottom-[15%] right-[8%] brutalist-border bg-background p-4 md:p-6 brutalist-shadow-hover -rotate-3 group"
+          >
+            <div className="font-mono text-[10px] text-accent mb-1 font-bold uppercase tracking-tight">
+              {"// VISUALS"}
             </div>
-          </SectionContent>
-        </Container>
-      </Section>
-    </StackedSections>
+            <div className="font-display text-xl md:text-2xl font-bold uppercase group-hover:text-accent transition-colors">
+              Photos
+            </div>
+            <span className="absolute -bottom-3 -right-3 bg-accent text-foreground p-1 text-xs">
+              <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+            </span>
+          </Link>
+        </div>
+
+        {/* Mobile navigation buttons - Hidden on larger screens */}
+        <div className="hidden md:hidden flex flex-wrap justify-center gap-4 mt-8 relative z-20 px-4">
+          <Link
+            href="/work"
+            className="brutalist-border bg-background px-6 py-3 font-display font-bold uppercase brutalist-shadow text-sm"
+          >
+            Projects
+          </Link>
+          <Link
+            href="/blog"
+            className="brutalist-border bg-accent text-foreground px-6 py-3 font-display font-bold uppercase brutalist-shadow text-sm"
+          >
+            Blog
+          </Link>
+          <Link
+            href="#contact"
+            className="brutalist-border bg-foreground text-background px-6 py-3 font-display font-bold uppercase brutalist-shadow text-sm"
+          >
+            Contact
+          </Link>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20">
+          <p className="text-sm font-mono uppercase tracking-widest opacity-60">
+            Scroll to explore
+          </p>
+        </div>
+      </section>
+
+      {/* Tech Stack Marquee */}
+      <StackMarquee />
+
+      {/* About Section with Animations */}
+      <AboutSection />
+
+      {/* Contact CTA Section with Animations */}
+      <ContactSection />
+    </main>
   );
 }

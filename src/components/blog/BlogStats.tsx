@@ -1,10 +1,14 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClock } from '@fortawesome/free-solid-svg-icons';
-import { calculateBlogStats, formatTimeElapsed } from '@/lib/utils/blog-stats';
-import type { BlogPost } from '@/types/blog';
+import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faClock,
+  faCalendarCheck,
+  faHourglassHalf,
+} from "@fortawesome/free-solid-svg-icons";
+import { calculateBlogStats, formatTimeElapsed } from "@/lib/utils/blog-stats";
+import type { BlogPost } from "@/types/blog";
 
 interface BlogStatsProps {
   posts: BlogPost[];
@@ -41,41 +45,53 @@ export function BlogStats({ posts }: BlogStatsProps) {
           minutes: newMinutes,
         };
       });
-    }, 60000); // Update every minute instead of every second
+    }, 60000);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-3 p-4 rounded-lg bg-muted/50 border">
-      {/* Row 1: Clock Icon */}
-      <div className="flex items-center justify-center">
-        <FontAwesomeIcon icon={faClock} className="w-4 h-4 text-accent" />
+    <div className="flex flex-col md:flex-row items-center justify-around">
+      {/* Time since last post */}
+      <div className="flex items-center gap-3 p-3 bg-accent/5 brutalist-border h-fit w-3/4 md:w-2/5 my-1">
+        <FontAwesomeIcon
+          icon={faClock}
+          className="text-accent text-sm flex-shrink-0"
+        />
+        <div className="flex-1">
+          <p className="text-xs font-mono uppercase text-foreground/50">
+            Time since last post
+          </p>
+          <p className="font-mono text-sm font-bold">
+            {formatTimeElapsed(
+              timeElapsed.days,
+              timeElapsed.hours,
+              timeElapsed.minutes,
+            )}
+          </p>
+        </div>
       </div>
-      
-      {/* Row 1: Time Text */}
-      <p className="text-sm text-muted-foreground flex items-center">
-        <span className="font-medium">Time since last post:</span>{' '}
-        <span className="font-mono text-foreground ml-1">
-          {formatTimeElapsed(timeElapsed.days, timeElapsed.hours, timeElapsed.minutes)}
-        </span>
-      </p>
-      
-      {/* Row 2: Tilde Icon */}
-      <div className="flex items-center justify-center">
-        <span className="text-accent">~</span>
+
+      {/* Writing frequency */}
+      <div className="flex items-center gap-3 p-3 bg-accent/5 brutalist-border w-3/4 md:w-2/5 my-1">
+        <FontAwesomeIcon
+          icon={faCalendarCheck}
+          className="text-accent text-sm flex-shrink-0"
+        />
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-mono uppercase text-foreground/50">
+            Writing frequency
+          </p>
+          <p className="font-mono text-sm font-bold">
+            {stats.frequency.label}
+            {stats.meanDaysBetweenPosts > 0 && (
+              <span className="text-xs ml-2 opacity-60">
+                (~{Math.round(stats.meanDaysBetweenPosts)}d avg)
+              </span>
+            )}
+          </p>
+        </div>
       </div>
-      
-      {/* Row 2: Frequency Text */}
-      <p className="text-sm text-muted-foreground flex items-center flex-wrap">
-        <span className="font-medium">Writing frequency:</span>{' '}
-        <span className="text-foreground">{stats.frequency.label}</span>
-        {stats.meanDaysBetweenPosts > 0 && (
-          <span className="text-xs ml-2 opacity-60">
-            (avg. {Math.round(stats.meanDaysBetweenPosts)} days apart)
-          </span>
-        )}
-      </p>
     </div>
   );
 }

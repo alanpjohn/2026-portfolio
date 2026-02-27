@@ -1,5 +1,9 @@
 'use client';
 
+// TODO: Add tag-based filtering after more blog posts are added
+// Tags are already indexed in pagefind via data-pagefind-filter attributes
+// Current implementation only uses text search until blog grows larger
+
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import {
@@ -116,6 +120,10 @@ export function BlogSearchBar() {
 
     const timeout = setTimeout(() => {
       setLoading(true);
+      
+      // TODO: Add tag filtering here after more blog posts are added
+      // filter: { type: 'blog', tag: selectedTags }
+      
       pagefindRef.current
         ?.search(trimmedQuery, { filter: { type: 'blog' }, limit: 20 })
         .then(async (payload) => {
@@ -214,63 +222,73 @@ export function BlogSearchBar() {
   const showDropdown = trimmedQuery.length > 0;
 
   return (
-    <div className="relative w-full max-w-2xl">
-      <label htmlFor="blog-search" className="sr-only">
-        Search blog posts
-      </label>
-      <div className="relative mb-3 rounded-2xl border border-foreground/10 bg-card px-4 py-3 shadow-sm transition focus-within:border-accent">
-        <input
-          id="blog-search"
-          type="search"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder="Search posts, topics, or tags"
-          className="w-full bg-transparent text-base font-medium outline-none placeholder:text-muted-foreground"
-          aria-label="Search blog posts"
-        />
+    <div className="w-full">
+      {/* Search Input with brutalist styling */}
+      <div className="brutalist-border bg-background brutalist-shadow mb-4">
+        <label htmlFor="blog-search" className="sr-only">
+          Search blog posts
+        </label>
+        <div className="flex items-center">
+          <div className="flex-grow flex items-center px-4 py-3">
+            <input
+              id="blog-search"
+              type="search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search posts, topics, or tags..."
+              className="w-full bg-transparent text-base font-medium outline-none placeholder:text-foreground/50 font-mono"
+              aria-label="Search blog posts"
+            />
+          </div>
+          <div className="px-4 py-3 border-l-3 border-foreground">
+            <span className="font-mono text-xs text-foreground/50 uppercase">
+              SEARCH
+            </span>
+          </div>
+        </div>
       </div>
 
+      {/* Search Results Dropdown */}
       <AnimatePresence>
         {showDropdown && (
           <motion.div
-            className="absolute left-0 right-0 z-20 overflow-hidden rounded-2xl border border-foreground/10 bg-background/80 shadow-2xl backdrop-blur"
+            className="brutalist-border bg-background brutalist-shadow overflow-hidden"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
             key="blog-search-dropdown"
-            style={{ willChange: 'height' }}
           >
-            <div className="divide-y divide-foreground/5">
+            <div className="p-4">
               {pagefindState === 'loading' && (
-                <div className="px-5 py-4 text-sm text-muted-foreground">
-                  Loading search engine…
+                <div className="px-4 py-3 text-sm font-mono text-foreground/60">
+                  Loading search engine...
                 </div>
               )}
               {pagefindState === 'error' && (
-                <div className="px-5 py-4 text-sm text-destructive">
+                <div className="px-4 py-3 text-sm font-mono text-red-500">
                   Search is unavailable right now.
                 </div>
               )}
 
               {loading && (
-                <div className="px-5 py-4 text-sm text-muted-foreground">
-                  Searching for &ldquo;{trimmedQuery}&rdquo;…
+                <div className="px-4 py-3 text-sm font-mono text-foreground/60">
+                  Searching...
                 </div>
               )}
 
               {!loading && pagefindState === 'ready' && visibleResults.length === 0 && (
-                <div className="px-5 py-4 text-sm text-muted-foreground">
-                  No results for &ldquo;{trimmedQuery}&rdquo;.
+                <div className="px-4 py-3 text-sm font-mono text-foreground/60">
+                  No results found.
                 </div>
               )}
 
               {!loading && visibleResults.length > 0 && (
-                <div className="flex flex-col px-2 py-2">
+                <div className="flex flex-col">
                   {visibleResults.map((result, index) => (
                     <motion.div
                       key={result.url}
-                      className="px-4 py-3"
+                      className="border-b-2 border-foreground/10 last:border-b-0"
                       custom={index}
                       variants={itemVariants}
                       initial="hidden"
@@ -279,15 +297,15 @@ export function BlogSearchBar() {
                     >
                       <Link
                         href={result.url}
-                        className="block rounded-xl px-3 py-2 text-base font-semibold text-card-foreground hover:bg-accent/10"
+                        className="block px-4 py-3 hover:bg-accent/10 transition-colors"
                         onClick={() => setQuery('')}
                       >
-                        <span className="block text-lg font-semibold">
+                        <span className="block text-lg font-semibold font-display uppercase mb-1">
                           {result.title ?? 'Untitled post'}
                         </span>
                         {result.excerpt && (
                           <span
-                            className="block text-sm text-muted-foreground [&_mark]:bg-accent [&_mark]:text-accent-foreground [&_mark]:px-0.5 [&_mark]:rounded"
+                            className="block text-sm text-foreground/70 [&_mark]:bg-accent [&_mark]:text-foreground [&_mark]:px-0.5"
                             dangerouslySetInnerHTML={{ __html: result.excerpt }}
                           />
                         )}

@@ -1,16 +1,10 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
-import {
-  motion,
-  easeOut,
-  easeIn,
-  useReducedMotion,
-  AnimatePresence,
-} from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ThemeToggle } from "@/lib/theme/toggle";
 import { navigationLinks } from "@/data/config";
 
@@ -18,60 +12,6 @@ const MOBILE_MENU_ID = "site-mobile-menu";
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [menuHeight, setMenuHeight] = useState(0);
-  const menuContentRef = useRef<HTMLDivElement>(null);
-  const prefersReducedMotion = useReducedMotion();
-
-  // Animation variants for mobile menu container
-  const menuContainerVariants = {
-    hidden: { height: 0, opacity: 0 },
-    visible: {
-      height: menuHeight,
-      opacity: 1,
-      transition: prefersReducedMotion
-        ? { duration: 0 }
-        : {
-            height: { duration: 0.3, ease: easeOut },
-            opacity: { duration: 0.2 },
-          },
-    },
-    exit: {
-      height: 0,
-      opacity: 0,
-      transition: prefersReducedMotion
-        ? { duration: 0 }
-        : {
-            height: { duration: 0.25, ease: easeIn },
-            opacity: { duration: 0.15, delay: 0.1 },
-          },
-    },
-  };
-
-  // Animation variants for menu items
-  const menuItemVariants = {
-    hidden: { x: prefersReducedMotion ? 0 : -20, opacity: 0 },
-    visible: (i: number) => ({
-      x: 0,
-      opacity: 1,
-      transition: prefersReducedMotion
-        ? { duration: 0 }
-        : {
-            delay: 0.2 + i * 0.05, // Start during expansion with 0.2s delay, 0.05s stagger
-            duration: 0.2,
-            ease: easeOut,
-          },
-    }),
-    exit: {
-      x: prefersReducedMotion ? 0 : -20,
-      opacity: 0,
-      transition: prefersReducedMotion
-        ? { duration: 0 }
-        : {
-            duration: 0.15,
-            ease: easeIn,
-          },
-    },
-  };
 
   useEffect(() => {
     const closeOnEscape = (event: KeyboardEvent) => {
@@ -84,93 +24,86 @@ export function Header() {
     return () => document.removeEventListener("keydown", closeOnEscape);
   }, []);
 
-  // Measure menu content height when opening
-  useEffect(() => {
-    if (menuOpen) {
-      // Use requestAnimationFrame to ensure DOM is updated
-      const animationFrame = requestAnimationFrame(() => {
-        if (menuContentRef.current) {
-          const height = menuContentRef.current.scrollHeight;
-          setMenuHeight(height > 0 ? height : 200); // Fallback to 200px if measurement fails
-        }
-      });
-      return () => cancelAnimationFrame(animationFrame);
-    } else {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setMenuHeight(0);
-    }
-  }, [menuOpen]);
-
   const toggleMenu = () => setMenuOpen((prev) => !prev);
 
+  // Map navigation links to numbered format
+  const numberedLinks = [
+    { num: "01", ...navigationLinks[0] }, // Home
+    { num: "02", ...navigationLinks[1] }, // Blog
+    { num: "03", ...navigationLinks[2] }, // Work
+    { num: "04", ...navigationLinks[3] }, // Photos (external)
+  ];
+
   return (
-     <header className="fixed top-4 left-4 right-4 z-40 mx-4 rounded-lg border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 max-w-screen-2xl items-center justify-between px-4 md:px-6">
-        <div className="flex items-center gap-6">
-          <span className="text-xl font-logo font-bold">AJ</span>
-          <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
-            {navigationLinks.map((link) => (
+    <header className="sticky top-0 z-50 border-b-4 border-foreground bg-background">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          {/* Logo - Using Nippo font */}
+          <Link 
+            href="/" 
+            className="font-nippo text-2xl font-bold"
+          >
+            [ AJ ]
+          </Link>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-8">
+            {numberedLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="link-foreground hover:text-accent transition-colors duration-200"
+                className="flex items-center gap-1 font-mono text-sm font-bold uppercase tracking-wide link-foreground hover:text-accent transition-colors"
               >
-                {link.name}
+                <span className="text-accent">{link.num}.</span>
+                <span>{link.name}</span>
               </Link>
             ))}
           </nav>
-        </div>
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            className="flex h-10 w-10 items-center justify-center text-foreground transition-colors hover:text-accent md:hidden"
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={menuOpen}
-            aria-controls={MOBILE_MENU_ID}
-            onClick={toggleMenu}
-          >
-            <FontAwesomeIcon
-              icon={menuOpen ? faTimes : faBars}
-              className="text-lg"
-            />
-          </button>
-          <ThemeToggle />
+
+          {/* Right side: Theme toggle (visible on all screens) + Mobile menu button */}
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <button
+              type="button"
+              className="flex h-10 w-10 items-center justify-center brutalist-border hover:bg-accent transition-colors md:hidden"
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
+              aria-controls={MOBILE_MENU_ID}
+              onClick={toggleMenu}
+            >
+              <FontAwesomeIcon
+                icon={menuOpen ? faTimes : faBars}
+                className="text-lg"
+              />
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Mobile Navigation - Fixed position overlay */}
       <AnimatePresence>
         {menuOpen && (
           <motion.nav
             id={MOBILE_MENU_ID}
-            className="md:hidden bg-background/95 overflow-hidden"
-            variants={menuContainerVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            style={{ willChange: "height" }}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="md:hidden fixed top-[64px] left-0 right-0 border-b-4 border-foreground bg-background/95 backdrop-blur-sm z-40"
           >
-            <motion.div
-              ref={menuContentRef}
-              className="container flex flex-col space-y-4 py-6"
-            >
-              {navigationLinks.map((link, index) => (
-                <motion.div
+            <div className="px-4 py-6 space-y-4 max-w-7xl mx-auto">
+              {numberedLinks.map((link) => (
+                <Link
                   key={link.href}
-                  custom={index}
-                  variants={menuItemVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
+                  href={link.href}
+                  className="flex items-center gap-2 font-mono text-base font-bold uppercase link-foreground hover:text-accent transition-colors"
+                  onClick={() => setMenuOpen(false)}
                 >
-                  <Link
-                    href={link.href}
-                    className="block px-4 py-2 text-base font-medium link-foreground hover:text-accent transition-colors duration-200"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    {link.name}
-                  </Link>
-                </motion.div>
+                  <span className="text-accent">{link.num}.</span>
+                  <span>{link.name}</span>
+                </Link>
               ))}
-            </motion.div>
+            </div>
           </motion.nav>
         )}
       </AnimatePresence>

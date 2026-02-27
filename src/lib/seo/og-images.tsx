@@ -112,32 +112,70 @@ function OGCard({ title, description, tags, date }: OGCardProps) {
       style={{
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center", // Center content vertically
+        justifyContent: "center",
         width: "1200px",
         height: "630px",
         backgroundColor: "#0d0e10",
         padding: "60px",
         color: "#f0ede6",
         fontFamily: "Archivo",
+        border: "16px solid #0A0A0A",
+        boxSizing: "border-box",
+        position: "relative",
       }}
     >
-      {/* Main content - left aligned for blog, centered for default */}
+      {/* Brutalist border frame */}
+      <div
+        style={{
+          position: "absolute",
+          top: "20px",
+          left: "20px",
+          right: "20px",
+          bottom: "20px",
+          border: "6px solid #f0ede6",
+          pointerEvents: "none",
+        }}
+      />
+      
+      {/* Main content - render AFTER decorative elements so it appears on top */}
       <div
         style={{
           display: "flex",
           flexDirection: "column",
-          maxWidth: "1000px",
+          maxWidth: "900px",
           ...(isBlogPost ? {} : { alignItems: "center", textAlign: "center" })
         }}
       >
+        {/* Date badge for blog posts */}
+        {isBlogPost && (
+          <div
+            style={{
+              display: "flex",
+              backgroundColor: "#2cb67d",
+              color: "#0d0e10",
+              padding: "8px 16px",
+              fontFamily: "Archivo",
+              fontSize: "18px",
+              fontWeight: 600,
+              textTransform: "uppercase",
+              marginBottom: "20px",
+              alignSelf: isBlogPost ? "flex-start" : "center",
+            }}
+          >
+            {date}
+          </div>
+        )}
+
         {/* Title - Large Clash Display */}
         <h1
           style={{
             fontFamily: "Clash Display",
-            fontSize: title.length > 40 ? "56px" : "64px",
-            fontWeight: 600, // Semibold
+            fontSize: title.length > 40 ? "52px" : "60px",
+            fontWeight: 600,
             lineHeight: 1.1,
-            marginBottom: isBlogPost ? "16px" : "24px",
+            marginBottom: isBlogPost ? "20px" : "24px",
+            textTransform: "uppercase",
+            letterSpacing: "-0.02em",
           }}
         >
           {title}
@@ -147,69 +185,49 @@ function OGCard({ title, description, tags, date }: OGCardProps) {
         {isBlogPost && description && (
           <p
             style={{
-              fontSize: "24px",
+              fontSize: "22px",
               lineHeight: 1.4,
-              color: "rgba(240, 237, 230, 0.9)",
+              color: "rgba(240, 237, 230, 0.85)",
               fontWeight: 400,
-              marginBottom: "24px",
-              maxWidth: "800px",
-              display: "-webkit-box",
-              WebkitLineClamp: 3,
-              WebkitBoxOrient: "vertical",
+              marginBottom: "28px",
+              maxWidth: "750px",
+              maxHeight: "66px",
               overflow: "hidden",
-              ...(isBlogPost ? {} : { textAlign: "center" })
             }}
           >
-            {description}
+            {description.length > 120 ? description.slice(0, 120) + "..." : description}
           </p>
         )}
 
-        {/* Date and tags row */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "16px",
-            marginBottom: "32px",
-            flexWrap: "wrap",
-            ...(isBlogPost ? {} : { justifyContent: "center" })
-          }}
-        >
-          <span
-            style={{
-              fontSize: "20px",
-              color: "rgba(240, 237, 230, 0.7)",
-              fontWeight: 500,
-            }}
-          >
-            {date}
-          </span>
-
-          {/* Tags */}
-          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-            {tags.slice(0, 5).map((tag) => (
-              <span
-                key={tag}
-                style={{
-                  backgroundColor: "#2cb67d",
-                  color: "#0d0e10",
-                  fontSize: "18px",
-                  fontWeight: 500,
-                  padding: "4px 10px",
-                  borderRadius: "4px",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.5px",
-                  display: "block",
-                }}
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
+        {/* Tags */}
+        <div style={{ 
+          display: "flex", 
+          gap: "10px", 
+          flexWrap: "wrap",
+          ...(isBlogPost ? {} : { justifyContent: "center" })
+        }}>
+          {tags.slice(0, 5).map((tag) => (
+            <span
+              key={tag}
+              style={{
+                backgroundColor: "#2cb67d",
+                color: "#0d0e10",
+                fontSize: "16px",
+                fontWeight: 600,
+                padding: "6px 12px",
+                textTransform: "uppercase",
+                letterSpacing: "0.5px",
+                display: "block",
+                fontFamily: "Archivo",
+              }}
+            >
+              {tag}
+            </span>
+          ))}
         </div>
       </div>
 
-      {/* Footer - AJ on the right */}
+      {/* Footer - AJ logo with bracket style - render AFTER main content */}
       <div
         style={{
           position: "absolute",
@@ -221,14 +239,30 @@ function OGCard({ title, description, tags, date }: OGCardProps) {
         <span
           style={{
             fontFamily: "Nippo",
-            fontSize: "32px",
+            fontSize: "36px",
             fontWeight: 400,
-            color: "#f0ede6", // Same as foreground text
+            color: "#f0ede6",
+            backgroundColor: "#0d0e10",
+            padding: "4px 12px",
+            border: "3px solid #f0ede6",
           }}
         >
-          AJ
+          [ AJ ]
         </span>
       </div>
+
+      {/* Left side decoration line */}
+      <div
+        style={{
+          position: "absolute",
+          left: "40px",
+          top: "50%",
+          transform: "translateY(-50%)",
+          width: "4px",
+          height: "200px",
+          backgroundColor: "#2cb67d",
+        }}
+      />
     </div>
   );
 }
