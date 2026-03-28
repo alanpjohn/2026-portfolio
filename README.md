@@ -16,9 +16,61 @@ A modern, purely static portfolio website built with Next.js 16 and deployed on 
 - Static generation provides better performance and simpler hosting.
 
 **Content Management**:
-- Content is managed locally in the `content/` directory (not pushed to GitHub)
-- Automatic backup to Cloudflare R2 storage via `bun run content:backup`
-- Content sync commands ensure data safety and availability across development environments
+- Content is managed externally via the `CONTENT_DIR` environment variable
+- Set `CONTENT_DIR` in `.env.local` to point to your content directory (see `.env.example`)
+- Supports both relative paths (e.g., `./content`, `../my-content`) and absolute paths
+- Use `content-example/` as a reference for the required directory structure
+- Content directory must contain:
+  - `blog/` subdirectory with Markdown (.md) posts
+  - `work.yaml` file with work items and projects
+
+## Environment Setup
+
+### Content Directory (CONTENT_DIR)
+
+The `CONTENT_DIR` environment variable is **required** and must point to your content directory.
+
+#### Quick Start
+
+1. Copy the example file:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Edit `.env` and set your content path:
+   ```bash
+   CONTENT_DIR=./content
+   ```
+
+3. Verify your content directory has the required structure:
+   ```
+   content/
+   ├── blog/          # Markdown blog posts
+   └── work.yaml      # Work items and projects
+   ```
+
+#### Path Formats
+
+**Relative paths** (resolved from project root):
+```bash
+CONTENT_DIR=./content           # Subdirectory
+CONTENT_DIR=../my-content       # Parent directory
+```
+
+**Absolute paths**:
+```bash
+CONTENT_DIR=/home/user/my-portfolio/content
+CONTENT_DIR=/mnt/external/portfolio-content
+```
+
+#### Troubleshooting
+
+If you see the error "CONTENT_DIR environment variable is not set":
+- Ensure you've created a `.env` file from `.env.example`
+- Check that CONTENT_DIR points to an existing directory
+- Verify the directory contains `blog/` and `work.yaml`
+
+See `content-example/` for a complete reference structure.
 
 ## Key Features
 
@@ -43,7 +95,8 @@ bun run velite           # Content processing and OG image generation
 ## Project Structure
 
 - `src/` - React components and pages
+- `content-example/` - Reference structure for external content management
 - `scripts/` - Build automation (image optimization)
 - `public/static/` - Generated optimized images and OG images
 
-The portfolio functions as a static site with content processed at build time, ensuring optimal performance and reliability.
+Content is external (referenced via `CONTENT_DIR` environment variable). The `content-example/` directory shows the expected structure with blog posts and work items.

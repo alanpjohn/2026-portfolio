@@ -52,3 +52,11 @@ next-env.d.ts
 
 .velite/
 .cache/
+
+# Content directory (optional - uncomment if using local content subdirectory)
+# If you set CONTENT_DIR to a local subdirectory like ./content or ./my-portfolio-content,
+# uncomment and update the line below to prevent committing your content to git
+# /content
+# /my-portfolio-content
+
+# content-example/ is intentionally NOT ignored as it serves as documentation

@@ -10,9 +10,6 @@
         "lint": "eslint ./src/",
         "velite": "velite",
         "optimize-images": "bunx tsx scripts/optimize-images.ts",
-        "content:backup": "bunx tsx scripts/sync-content.ts backup",
-        "content:restore": "bunx tsx scripts/sync-content.ts restore",
-        "content:ensure": "bunx tsx scripts/sync-content.ts ensure",
         "deploy:pages": "bun run optimize-images && velite && next build && pagefind --site out --glob \"blog/**/*.html\" && wrangler pages deploy ./out --project-name=2026-portfolio-static",
         "audit:lighthouse": "lhci autorun --config=.lighthouserc.js"
     },

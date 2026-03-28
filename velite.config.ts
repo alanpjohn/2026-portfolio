@@ -3,29 +3,14 @@ import rehypeHighlight from "rehype-highlight";
 import rehypeHighlightCodeLines from "rehype-highlight-code-lines";
 import { rehypeImageOptimization } from "./src/lib/content/rehype-images";
 import { rehypeTableWrapper } from "./src/lib/content/rehype-tables";
-import { execSync } from "child_process";
+import { getContentDir } from "./src/lib/content/env";
 import {
   generateBlogOGImage,
   generateDefaultOGImage,
 } from "@/lib/seo/og-images";
 
-// Pre-hook to ensure content exists before velite runs
-function ensureContentPreHook() {
-  console.log("🔄 Ensuring content exists before velite build...");
-
-  try {
-    execSync(`bunx tsx scripts/sync-content.ts ensure`, {
-      stdio: "inherit",
-      cwd: process.cwd(),
-    });
-    console.log("✅ Content ready for velite");
-  } catch (error) {
-    console.error("❌ Content ensure failed:", error);
-    process.exit(1);
-  }
-}
-
 export default defineConfig({
+  root: getContentDir(),
   collections: {
     blog: {
       name: "BlogPost",
@@ -84,7 +69,6 @@ export default defineConfig({
       }),
     },
   },
-  prepare: ensureContentPreHook,
   complete: async (data) => {
     await generateDefaultOGImage();
     for (const post of data.blog) {
