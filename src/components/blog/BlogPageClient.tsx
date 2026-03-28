@@ -27,6 +27,7 @@ export default function BlogPage({
   hasNext,
   currentPage,
   allPosts,
+  availableTags,
 }: {
   posts: ReturnType<typeof getPaginatedBlogPosts>["posts"];
   totalPages: number;
@@ -34,6 +35,7 @@ export default function BlogPage({
   hasNext: boolean;
   currentPage: number;
   allPosts: ReturnType<typeof getAllBlogPosts>;
+  availableTags: string[];
 }) {
   // Calculate grid layout for blog stats placement
   const totalPosts = posts.length;
@@ -60,7 +62,7 @@ export default function BlogPage({
             </div>
 
             {/* Search Bar */}
-            <BlogSearchBar />
+            <BlogSearchBar availableTags={availableTags} />
           </div>
         </div>
       </section>

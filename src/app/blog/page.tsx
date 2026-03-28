@@ -1,5 +1,5 @@
 import BlogPageClient from "../../components/blog/BlogPageClient";
-import { getPaginatedBlogPosts, getAllBlogPosts } from "@/lib/api/blog";
+import { getPaginatedBlogPosts, getAllBlogPosts, getAllTags } from "@/lib/api/blog";
 import { seoConfig } from "@/lib/seo/config";
 import type { Metadata } from "next";
 
@@ -40,6 +40,7 @@ export default async function BlogPage({
   const { posts, totalPages, hasPrev, hasNext } =
     getPaginatedBlogPosts(currentPage);
   const allPosts = getAllBlogPosts();
+  const allTags = getAllTags().sort((a, b) => a.localeCompare(b));
 
   return (
     <BlogPageClient
@@ -49,6 +50,7 @@ export default async function BlogPage({
       hasNext={hasNext}
       currentPage={currentPage}
       allPosts={allPosts}
+      availableTags={allTags}
     />
   );
 }

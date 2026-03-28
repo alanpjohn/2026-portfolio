@@ -1,9 +1,5 @@
 'use client';
 
-// TODO: Add tag-based filtering after more blog posts are added
-// Tags are already indexed in pagefind via data-pagefind-filter attributes
-// Current implementation only uses text search until blog grows larger
-
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import {
@@ -32,15 +28,28 @@ type PagefindSearchResult = {
   }>;
 };
 
+type PagefindFilterValue = string | string[] | {
+  any?: string[]
+  all?: string[]
+  none?: string[]
+}
+
 type PagefindModule = {
-  init(): Promise<void>;
+  init(): Promise<void>
   search(
     query: string,
-    options?: { filter?: Record<string, string | string[]>; limit?: number },
+    options?: {
+      filters?: Record<string, PagefindFilterValue>
+      limit?: number
+    },
   ): Promise<{
-    results: PagefindSearchResult[];
-  }>;
-};
+    results: PagefindSearchResult[]
+  }>
+}
+
+interface BlogSearchBarProps {
+  availableTags: string[]
+}
 
 const RESULT_LIMIT = 6;
 const RECENCY_DECAY_DAYS = 30;
@@ -70,14 +79,106 @@ function extractDateFromUrl(url: string): Date | null {
   return null;
 }
 
-export function BlogSearchBar() {
+
+
+interface SelectedTagsProps {
+  selectedTags: string[]
+  onRemove: (tag: string) => void
+  onClearAll: () => void
+  prefersReducedMotion: boolean | null
+}
+
+function SelectedTags({ selectedTags, onRemove, onClearAll, prefersReducedMotion }: SelectedTagsProps) {
+  if (selectedTags.length === 0) return null
+
+  const chipVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: prefersReducedMotion
+        ? { duration: 0 }
+        : { duration: 0.15, ease: easeOut }
+    },
+    exit: {
+      opacity: 0,
+      scale: 0.8,
+      transition: prefersReducedMotion
+        ? { duration: 0 }
+        : { duration: 0.1, ease: easeIn }
+    }
+  }
+
+  return (
+    <div className="flex flex-wrap gap-2 mt-3" aria-label="Active filters">
+      <button
+        onClick={onClearAll}
+        className="font-mono text-xs text-foreground/60 hover:text-accent underline"
+        aria-label="Clear all filters"
+      >
+        Clear all
+      </button>
+      <AnimatePresence mode="popLayout">
+        {selectedTags.map((tag) => (
+          <motion.span
+            key={tag}
+            variants={chipVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            layout
+            className="brutalist-border bg-accent/10 font-mono text-xs px-2 py-1 flex items-center gap-1"
+            aria-label={`Filter: ${tag}`}
+          >
+            #{tag.toUpperCase()}
+            <button
+              onClick={() => onRemove(tag)}
+              className="ml-1 text-foreground/60 hover:text-foreground"
+              aria-label={`Remove ${tag} filter`}
+            >
+              ×
+            </button>
+          </motion.span>
+        ))}
+      </AnimatePresence>
+    </div>
+  )
+}
+
+export function BlogSearchBar({ availableTags }: BlogSearchBarProps) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<PagefindResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [pagefindState, setPagefindState] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [isTagDropdownOpen, setIsTagDropdownOpen] = useState(false);
   const prefersReducedMotion = useReducedMotion();
   const pagefindRef = useRef<PagefindModule | null>(null);
   const loadAttemptedRef = useRef(false);
+
+  // Screen reader announcements
+  const [announcement, setAnnouncement] = useState('')
+
+  // Announce filter changes
+  useEffect(() => {
+    if (selectedTags.length > 0) {
+      setAnnouncement(`${selectedTags.length} filter${selectedTags.length === 1 ? '' : 's'} active: ${selectedTags.join(', ')}`)
+    }
+  }, [selectedTags])
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    );
+  };
+
+  const removeTag = (tag: string) => {
+    setSelectedTags((prev) => prev.filter((t) => t !== tag));
+  };
+
+  const clearAllTags = () => {
+    setSelectedTags([]);
+  };
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -108,8 +209,19 @@ export function BlogSearchBar() {
   const trimmedQuery = query.trim();
   const visibleResults = useMemo(() => results.slice(0, RESULT_LIMIT), [results]);
 
+  // Announce result count changes
   useEffect(() => {
-    if (!trimmedQuery) {
+    if (!loading && pagefindState === 'ready' && (trimmedQuery || selectedTags.length > 0)) {
+      setAnnouncement(`${visibleResults.length} result${visibleResults.length === 1 ? '' : 's'} found`)
+    }
+  }, [visibleResults.length, loading, pagefindState, trimmedQuery, selectedTags.length])
+
+  useEffect(() => {
+    const hasQuery = trimmedQuery.length > 0;
+    const hasTags = selectedTags.length > 0;
+
+    // Early return only when BOTH query and tags are empty
+    if (!hasQuery && !hasTags) {
       setResults([]);
       return;
     }
@@ -120,30 +232,33 @@ export function BlogSearchBar() {
 
     const timeout = setTimeout(() => {
       setLoading(true);
-      
-      // TODO: Add tag filtering here after more blog posts are added
-      // filter: { type: 'blog', tag: selectedTags }
-      
+
+      // Build filters object
+      const filters: Record<string, PagefindFilterValue> = { type: 'blog' };
+      if (hasTags) {
+        filters.tag = { any: selectedTags }; // OR logic - CRITICAL!
+      }
+
       pagefindRef.current
-        ?.search(trimmedQuery, { filter: { type: 'blog' }, limit: 20 })
+        ?.search(trimmedQuery, { filters, limit: 20 }) // Note: 'filters' not 'filter'
         .then(async (payload) => {
           const searchResults = payload.results ?? [];
           const mappedResults = await Promise.all(
             searchResults.map(async (result: PagefindSearchResult, index: number) => {
               const data = await result.data();
-              
+
               // Calculate relevance score based on position (1.0 for first, decreasing for lower)
-              const relevanceScore = 1.0 - (index * 0.05);
-              
+              const relevanceScore = 1.0 - index * 0.05;
+
               // Try to extract date from URL or meta
               let postDate = extractDateFromUrl(data.url);
               if (!postDate) {
                 // Fallback: assume recent post if date can't be extracted
                 postDate = new Date();
               }
-              
+
               const hybridScore = calculateHybridScore(relevanceScore, postDate);
-              
+
               return {
                 id: result.id,
                 title: data.meta?.title ?? 'Untitled post',
@@ -154,7 +269,7 @@ export function BlogSearchBar() {
               };
             }),
           );
-          
+
           // Sort by hybrid score (higher is better)
           const sortedResults = mappedResults.sort((a, b) => b.score - a.score);
           setResults(sortedResults);
@@ -168,7 +283,7 @@ export function BlogSearchBar() {
     }, 250);
 
     return () => clearTimeout(timeout);
-  }, [trimmedQuery, pagefindState]);
+  }, [trimmedQuery, selectedTags, pagefindState]); // ADD selectedTags to deps
 
   const containerVariants = {
     hidden: {
@@ -219,12 +334,17 @@ export function BlogSearchBar() {
     },
   };
 
-  const showDropdown = trimmedQuery.length > 0;
+  const showDropdown = trimmedQuery.length > 0 || selectedTags.length > 0;
 
   return (
     <div className="w-full">
+      {/* Screen reader announcements */}
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        {announcement}
+      </div>
+
       {/* Search Input with brutalist styling */}
-      <div className="brutalist-border bg-background brutalist-shadow mb-4">
+      <div className="brutalist-border bg-background brutalist-shadow mb-4 relative">
         <label htmlFor="blog-search" className="sr-only">
           Search blog posts
         </label>
@@ -240,13 +360,94 @@ export function BlogSearchBar() {
               aria-label="Search blog posts"
             />
           </div>
-          <div className="px-4 py-3 border-l-3 border-foreground">
+          <div className="px-4 py-3 border-l-3 border-foreground flex items-center gap-3">
+            {/* Tag Toggle Button */}
+            <button
+              onClick={() => setIsTagDropdownOpen((prev) => !prev)}
+              className={`font-mono text-xs uppercase transition-colors ${
+                isTagDropdownOpen || selectedTags.length > 0
+                  ? 'text-accent'
+                  : 'text-foreground/50 hover:text-foreground'
+              }`}
+              aria-expanded={isTagDropdownOpen}
+              aria-haspopup="listbox"
+              aria-controls="tag-dropdown"
+              aria-label={`Filter by tags${selectedTags.length > 0 ? ` (${selectedTags.length} selected)` : ''}`}
+            >
+              TAGS
+              {selectedTags.length > 0 && (
+                <span className="ml-1 text-accent" aria-hidden="true">({selectedTags.length})</span>
+              )}
+            </button>
             <span className="font-mono text-xs text-foreground/50 uppercase">
               SEARCH
             </span>
           </div>
         </div>
+        
+        {/* Tag Dropdown */}
+        <AnimatePresence>
+          {isTagDropdownOpen && (
+            <motion.div
+              id="tag-dropdown"
+              role="listbox"
+              aria-multiselectable="true"
+              aria-label="Available tags"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="brutalist-border brutalist-shadow bg-background absolute left-0 right-0 mt-2 z-50 max-h-60 overflow-y-auto"
+              onKeyDown={(event) => {
+                if (event.key === 'Escape') {
+                  event.preventDefault()
+                  setIsTagDropdownOpen(false)
+                }
+              }}
+            >
+              <div className="p-2 flex flex-wrap gap-1.5">
+                {availableTags.map((tag) => {
+                  const isSelected = selectedTags.includes(tag)
+                  return (
+                    <button
+                      key={tag}
+                      role="option"
+                      aria-selected={isSelected}
+                      onClick={() => toggleTag(tag)}
+                      className={`brutalist-border font-mono text-[10px] px-2 py-1 transition-colors text-left ${
+                        isSelected
+                          ? 'bg-accent text-foreground border-accent'
+                          : 'hover:bg-accent/10'
+                      }`}
+                    >
+                      #{tag.toUpperCase()}
+                    </button>
+                  )
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
+
+      {/* Selected Tags */}
+      <AnimatePresence mode="popLayout">
+        {selectedTags.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.2 }}
+          >
+            <SelectedTags
+              selectedTags={selectedTags}
+              onRemove={removeTag}
+              onClearAll={clearAllTags}
+              prefersReducedMotion={prefersReducedMotion}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Search Results Dropdown */}
       <AnimatePresence>
@@ -279,7 +480,15 @@ export function BlogSearchBar() {
 
               {!loading && pagefindState === 'ready' && visibleResults.length === 0 && (
                 <div className="px-4 py-3 text-sm font-mono text-foreground/60">
-                  No results found.
+                  {trimmedQuery ? (
+                    selectedTags.length > 0 ? (
+                      <>No results found for &quot;{trimmedQuery}&quot; with selected tags.</>
+                    ) : (
+                      <>No results found for &quot;{trimmedQuery}&quot;.</>
+                    )
+                  ) : (
+                    <>No posts found with selected tags.</>
+                  )}
                 </div>
               )}
 
