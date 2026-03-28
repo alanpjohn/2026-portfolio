@@ -1,0 +1,20 @@
+items:
+  - id: "sample-project"
+    title: "Sample Project"
+    type: "project"
+    description: "A sample project description"
+    tags: ["Sample", "Example"]
+    featured: true
+    date: "2024-01-01"
+    url: "https://example.com"
+
+  - id: "sample-experience"
+    title: "Sample Experience"
+    type: "experience"
+    description: "A sample work experience"
+    tags: ["Example"]
+    featured: true
+    company: "Example Corp"
+    role: "Developer"
+    date: "2024-01-01"
+    endDate: "2024-12-31"

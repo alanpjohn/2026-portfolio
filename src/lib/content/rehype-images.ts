@@ -3,6 +3,7 @@ import { getPlaiceholder } from 'plaiceholder'
 import { promises as fs } from 'fs'
 import * as path from 'path'
 import { Element, Properties, Root, Parent } from 'hast'
+import { getContentDir } from './env'
 
 // Configuration for remote image processing
 const REMOTE_IMAGE_CONFIG = {
@@ -118,15 +119,15 @@ export function rehypeImageOptimization() {
                   const staticMatch = src.match(/\/static\/([^-]+)-[a-f0-9]+\.png$/)
                   if (staticMatch) {
                     const baseName = staticMatch[1]
-                    imagePath = path.join(process.cwd(), 'content', 'blog', `${baseName}.png`)
+                    imagePath = path.join(getContentDir(), 'blog', `${baseName}.png`)
                   } else {
                     // Fallback: try the full path after /static/
                     const filename = src.replace('/static/', '')
-                    imagePath = path.join(process.cwd(), 'content', 'blog', filename)
+                    imagePath = path.join(getContentDir(), 'blog', filename)
                   }
                 } else {
                   // Regular relative path
-                  imagePath = path.join(process.cwd(), 'content', 'blog', src)
+                  imagePath = path.join(getContentDir(), 'blog', src)
                 }
 
                 try {

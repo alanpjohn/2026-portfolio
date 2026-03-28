@@ -40,7 +40,6 @@ bun run velite && bun run lint && bunx tsc --noEmit && bun run build  # Full che
 # - Velite content processing validation (`bun run velite`)
 # - Image optimization validation (`bun run optimize-images`)
 # - Build process verification (`bun run build`)
-# - Content sync operations testing (`bun run content:*`)
 # - Cross-browser compatibility testing
 # - Mobile responsiveness testing
 # - Accessibility testing with screen readers
@@ -50,14 +49,6 @@ bun run velite && bun run lint && bunx tsc --noEmit && bun run build  # Full che
 # Note: There are no commands for running individual tests
 # as no testing framework is configured. Use the commands above
 # for manual validation of different aspects of the application.
-```
-
-### Content Sync
-```bash
-bun run content:backup    # Upload all local content to R2
-bun run content:restore   # Download missing files from R2
-bun run content:ensure    # Check and restore missing content
-bun run content:full      # Restore then backup (development sync)
 ```
 
 ### Deployment
@@ -207,11 +198,8 @@ items:
 
 ## File Organization
 ```
-content/              # Root level
-├── blog/            # Markdown posts
-├── work.yaml        # Single work projects file
-└── config.yaml      # Site configuration
-
+content-example/     # Reference structure for external content
+                    # (actual content managed via CONTENT_DIR env var)
 src/
 ├── app/             # Next.js app router (kebab-case routes)
 ├── components/      # Reusable components
@@ -239,17 +227,18 @@ public/
 ## Git Workflow
 - Use conventional commit format (`feat:`, `fix:`, `docs:`, `refactor:`)
 - Run `bun run optimize-images && bun run velite && bun run lint && bunx tsc --noEmit && bun run build` before committing
-- Keep content and code changes separate
 - Use descriptive commit messages focusing on "why" not "what"
 - Sign commits with `-s` flag
 
 ## Content Management
-- Add blog posts: Create `.md` in `content/blog/`, run `bun run velite`
-- Add work projects: Edit `content/work.yaml`, run `bun run velite`
-- Velite regenerates types and OG images automatically on build
-- Content is processed at build time for optimal performance
-- OG images are generated in `public/static/og/` (1200x630 PNG format)
-- Images optimized via Sharp in `public/static/images/optimized/`
+Content is managed externally via the `CONTENT_DIR` environment variable:
+
+- Set `CONTENT_DIR` in `.env.local` (see `.env.example` for reference)
+- Supports both relative paths (from project root) and absolute paths
+- Content directory must contain a `blog/` subdirectory and `work.yaml`
+- Use `content-example/` as a reference for the required structure
+- Run `bun run velite` to process content after setting `CONTENT_DIR`
+- Velite regenerates types and OG images automatically
 
 ## Image Optimization
 **Architecture:**
