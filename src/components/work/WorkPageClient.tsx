@@ -42,7 +42,7 @@ export function WorkPageClient({ experiences, projects }: WorkPageClientProps) {
                 href={siteConfig.resumeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-accent text-foreground border-4 border-foreground font-display font-bold text-lg px-6 py-3 brutalist-shadow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex items-center gap-2"
+                className="bg-accent text-foreground border-4 border-foreground font-nippo font-bold text-lg px-6 py-3 brutalist-shadow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all flex items-center gap-2"
               >
                 RESUME
                 <FontAwesomeIcon icon={faDownload} />
@@ -132,7 +132,7 @@ export function WorkPageClient({ experiences, projects }: WorkPageClientProps) {
                         ? `${formatDate(item.date)} - ${formatDate(item.endDate)}`
                         : `${formatDate(item.date)} - PRESENT`}
                     </span>
-                    <h3 className="font-display font-bold text-2xl md:text-3xl uppercase">
+                    <h3 className="font-display font-semibold normal-case text-2xl md:text-3xl">
                       {item.role}
                     </h3>
                     <p className="text-xl font-bold opacity-60 font-mono">

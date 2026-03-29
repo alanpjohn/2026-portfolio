@@ -7,6 +7,18 @@ import { getPaginatedBlogPosts, getAllBlogPosts } from "@/lib/api/blog";
 import { formatDate } from "@/lib/utils/helpers";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { siteConfig } from "@/data/config";
+
+const spanClassMap = {
+  md: { 1: "md:col-span-1", 2: "md:col-span-2" } as const,
+  lg: { 1: "lg:col-span-1", 2: "lg:col-span-2", 3: "lg:col-span-3" } as const,
+};
+
+function getColSpanClasses(mdSpan: number, lgSpan: number): string {
+  const md = spanClassMap.md[mdSpan as keyof typeof spanClassMap.md] || "";
+  const lg = spanClassMap.lg[lgSpan as keyof typeof spanClassMap.lg] || "";
+  return `${md} ${lg}`.trim();
+}
 
 function GetBlogStatsColSpan(
   totalPosts: number,
@@ -28,6 +40,7 @@ export default function BlogPage({
   currentPage,
   allPosts,
   availableTags,
+  isLastPage,
 }: {
   posts: ReturnType<typeof getPaginatedBlogPosts>["posts"];
   totalPages: number;
@@ -36,6 +49,7 @@ export default function BlogPage({
   currentPage: number;
   allPosts: ReturnType<typeof getAllBlogPosts>;
   availableTags: string[];
+  isLastPage: boolean;
 }) {
   // Calculate grid layout for blog stats placement
   const totalPosts = posts.length;
@@ -43,7 +57,6 @@ export default function BlogPage({
 
   const mdBlogStatsSpan = GetBlogStatsColSpan(totalPosts, featuredPostCount, 2);
   const lgBlogStatsSpan = GetBlogStatsColSpan(totalPosts, featuredPostCount, 3);
-  console.log(totalPosts, featuredPostCount, lgBlogStatsSpan, mdBlogStatsSpan);
 
   return (
     <main className="bg-background min-h-screen">
@@ -97,7 +110,7 @@ export default function BlogPage({
                             {formatDate(post.date)}
                           </span>
                         </div>
-                        <h2 className="font-display text-2xl md:text-3xl uppercase mb-4 leading-tight group-hover:text-accent transition-colors">
+                        <h2 className="font-display text-2xl md:text-3xl font-semibold normal-case mb-4 leading-tight group-hover:text-accent transition-colors">
                           {post.title}
                         </h2>
                         <p className="text-foreground/70 mb-6 line-clamp-3">
@@ -140,12 +153,12 @@ export default function BlogPage({
                     <span className="text-foreground/50">
                       #
                       {String(
-                        allPosts.length - ((currentPage - 1) * 6 + index),
+                        allPosts.length - ((currentPage - 1) * siteConfig.pagination.postsPerPage + index),
                       ).padStart(3, "0")}
                     </span>
                     <span>{formatDate(post.date)}</span>
                   </div>
-                  <h2 className="font-display text-xl uppercase mb-4 flex-grow group-hover:text-accent transition-colors leading-tight">
+                  <h2 className="font-display text-xl font-semibold normal-case mb-4 flex-grow group-hover:text-accent transition-colors leading-tight">
                     {post.title}
                   </h2>
                   <p className="text-foreground/60 mb-6 text-sm line-clamp-3">
@@ -165,45 +178,51 @@ export default function BlogPage({
             );
           })}
 
-          {/* Blog Stats Card */}
-          <div
-            className={`lg:col-span-${lgBlogStatsSpan} md:col-span-${mdBlogStatsSpan}`}
-          >
-            <div className="flex flex-col brutalist-border bg-background brutalist-shadow p-6 h-full overflow-hidden">
-              <div className="shrink w-full">
-                <h3 className="font-mono text-xs uppercase text-foreground/50 mb-3 font-bold tracking-[0.2em]">
-                  {"// STATS"}
-                </h3>
-                <BlogStats posts={allPosts} />
-              </div>
-
-              {/* Coming Soon Info */}
-              <div className="mt-6 pt-6 border-t-2 border-foreground/20">
-                <div className="flex flex-col sm:flex-row gap-4 text-sm">
-                  <div className="flex items-start gap-3">
-                    <span className="text-accent font-bold">→</span>
-                    <p className="text-foreground/70">
-                      <span className="font-bold text-foreground">
-                        More articles in the pipeline.
-                      </span>{" "}
-                      Currently drafting deep dives on distributed systems, AI
-                      architecture, and cloud-native patterns.
-                    </p>
+          {isLastPage && (
+            <>
+              {/* Blog Stats Card */}
+              <div
+                className={getColSpanClasses(mdBlogStatsSpan, lgBlogStatsSpan)}
+                data-md-span={mdBlogStatsSpan}
+                data-lg-span={lgBlogStatsSpan}
+              >
+                <div className="@container flex flex-col brutalist-border bg-background brutalist-shadow p-6 h-full overflow-hidden">
+                  <div className="shrink w-full">
+                    <h3 className="font-mono text-xs uppercase text-foreground/50 mb-3 font-bold tracking-[0.2em]">
+                      {"// STATS"}
+                    </h3>
+                    <BlogStats posts={allPosts} />
                   </div>
-                  <div className="flex items-start gap-3">
-                    <span className="text-accent font-bold">→</span>
-                    <p className="text-foreground/70">
-                      <span className="font-bold text-foreground">
-                        Publishing cadence:
-                      </span>{" "}
-                      Trying to push out at least one article a month. Quality
-                      over quantity.
-                    </p>
+
+                  {/* Coming Soon Info */}
+                  <div className="blog-stats-coming-soon mt-6 pt-6 border-t-2 border-foreground/20">
+                    <div className="flex flex-col sm:flex-row gap-4 text-sm">
+                      <div className="flex items-start gap-3">
+                        <span className="text-accent font-bold">→</span>
+                        <p className="text-foreground/70">
+                          <span className="font-bold text-foreground">
+                            More articles in the pipeline.
+                          </span>{" "}
+                          Currently drafting deep dives on distributed systems, AI
+                          architecture, and cloud-native patterns.
+                        </p>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <span className="text-accent font-bold">→</span>
+                        <p className="text-foreground/70">
+                          <span className="font-bold text-foreground">
+                            Publishing cadence:
+                          </span>{" "}
+                          Trying to push out at least one article a month. Quality
+                          over quantity.
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </>
+          )}
         </div>
 
         {/* Pagination */}
@@ -213,7 +232,7 @@ export default function BlogPage({
             <div className="flex gap-2">
               {hasPrev ? (
                 <Link
-                  href={`/blog?page=${currentPage - 1}`}
+                  href={currentPage === 2 ? "/blog" : `/blog/pages/${currentPage - 1}`}
                   className="brutalist-border px-4 py-2 font-mono font-bold text-sm hover:bg-accent transition-colors bg-background brutalist-shadow-sm"
                 >
                   <FontAwesomeIcon icon={faArrowLeft} className="mr-2" />
@@ -230,7 +249,7 @@ export default function BlogPage({
               )}
               {hasNext ? (
                 <Link
-                  href={`/blog?page=${currentPage + 1}`}
+                  href={`/blog/pages/${currentPage + 1}`}
                   className="brutalist-border px-4 py-2 font-mono font-bold text-sm hover:bg-accent transition-colors bg-background brutalist-shadow-sm"
                 >
                   NEXT
@@ -255,7 +274,7 @@ export default function BlogPage({
                 return (
                   <Link
                     key={pageNum}
-                    href={`/blog?page=${pageNum}`}
+                    href={pageNum === 1 ? "/blog" : `/blog/pages/${pageNum}`}
                     className={`brutalist-border w-10 h-10 flex items-center justify-center font-bold text-sm transition-colors ${
                       isActive
                         ? "bg-foreground text-background"
@@ -272,7 +291,7 @@ export default function BlogPage({
                     ...
                   </span>
                   <Link
-                    href={`/blog?page=${totalPages}`}
+                    href={totalPages === 1 ? "/blog" : `/blog/pages/${totalPages}`}
                     className="brutalist-border w-10 h-10 flex items-center justify-center font-bold text-sm hover:bg-accent transition-colors bg-background"
                   >
                     {totalPages}

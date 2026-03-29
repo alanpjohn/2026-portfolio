@@ -3,8 +3,6 @@ import { getPaginatedBlogPosts, getAllBlogPosts, getAllTags } from "@/lib/api/bl
 import { seoConfig } from "@/lib/seo/config";
 import type { Metadata } from "next";
 
-export const dynamic = "force-static";
-
 export const metadata: Metadata = {
   title: seoConfig.pages.blog.title,
   description: seoConfig.pages.blog.description,
@@ -30,13 +28,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function BlogPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ page?: string }>;
-}) {
-  const { page } = await searchParams;
-  const currentPage = Number(page) || 1;
+export default async function BlogPage() {
+  const currentPage = 1;
   const { posts, totalPages, hasPrev, hasNext } =
     getPaginatedBlogPosts(currentPage);
   const allPosts = getAllBlogPosts();
@@ -51,6 +44,7 @@ export default async function BlogPage({
       currentPage={currentPage}
       allPosts={allPosts}
       availableTags={allTags}
+      isLastPage={!hasNext}
     />
   );
 }

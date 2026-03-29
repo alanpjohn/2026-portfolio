@@ -120,22 +120,22 @@ export default function Home() {
         </div>
 
         {/* Mobile navigation buttons - Hidden on larger screens */}
-        <div className="hidden md:hidden flex flex-wrap justify-center gap-4 mt-8 relative z-20 px-4">
+        <div className="md:hidden flex flex-wrap justify-center gap-4 mt-8 relative z-20 px-4">
           <Link
             href="/work"
-            className="brutalist-border bg-background px-6 py-3 font-display font-bold uppercase brutalist-shadow text-sm"
+            className="brutalist-border bg-background px-6 py-3 font-nippo font-bold uppercase brutalist-shadow text-sm"
           >
             Projects
           </Link>
           <Link
             href="/blog"
-            className="brutalist-border bg-accent text-foreground px-6 py-3 font-display font-bold uppercase brutalist-shadow text-sm"
+            className="brutalist-border bg-accent text-foreground px-6 py-3 font-nippo font-bold uppercase brutalist-shadow text-sm"
           >
             Blog
           </Link>
           <Link
             href="#contact"
-            className="brutalist-border bg-foreground text-background px-6 py-3 font-display font-bold uppercase brutalist-shadow text-sm"
+            className="brutalist-border bg-foreground text-background px-6 py-3 font-nippo font-bold uppercase brutalist-shadow text-sm"
           >
             Contact
           </Link>

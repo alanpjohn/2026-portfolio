@@ -19,10 +19,10 @@ export const archivo = localFont({
   preload: true,
 });
 
-// ClashDisplay Variable - Headings
-export const clashDisplay = localFont({
-  src: "../../public/assets/fonts/ClashDisplay-Variable.woff2",
-  variable: "--font-clash-display",
+// ClashGrotesk Variable - Headings
+export const clashGrotesk = localFont({
+  src: "../../public/assets/fonts/ClashGrotesk-Variable.woff2",
+  variable: "--font-clash-grotesk",
   weight: "200 700",
   display: "swap",
   preload: true,

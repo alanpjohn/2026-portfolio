@@ -195,7 +195,7 @@ export default async function BlogPostPage({
                   {"// TECHNICAL"}
                 </span>
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-display uppercase leading-[0.95] mb-4">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold font-display normal-case leading-[0.95] mb-4">
                 {post.title}
               </h1>
               <p className="text-lg font-medium leading-snug max-w-2xl text-foreground/70 italic border-l-4 border-accent pl-4">

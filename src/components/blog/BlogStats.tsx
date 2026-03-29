@@ -51,9 +51,9 @@ export function BlogStats({ posts }: BlogStatsProps) {
   }, []);
 
   return (
-    <div className="flex flex-col md:flex-row items-center justify-around">
+    <div className="flex flex-col @md:flex-row items-center justify-around">
       {/* Time since last post */}
-      <div className="flex items-center gap-3 p-3 bg-accent/5 brutalist-border h-fit w-3/4 md:w-2/5 my-1">
+      <div className="flex items-center gap-3 p-3 bg-accent/5 brutalist-border h-fit w-full @md:w-2/5 my-1">
         <FontAwesomeIcon
           icon={faClock}
           className="text-accent text-sm flex-shrink-0"
@@ -73,7 +73,7 @@ export function BlogStats({ posts }: BlogStatsProps) {
       </div>
 
       {/* Writing frequency */}
-      <div className="flex items-center gap-3 p-3 bg-accent/5 brutalist-border w-3/4 md:w-2/5 my-1">
+      <div className="flex items-center gap-3 p-3 bg-accent/5 brutalist-border w-full @md:w-2/5 my-1">
         <FontAwesomeIcon
           icon={faCalendarCheck}
           className="text-accent text-sm flex-shrink-0"

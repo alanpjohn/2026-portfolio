@@ -31,7 +31,7 @@ export const siteConfig = {
   resumeUrl:
     "https://drive.google.com/file/d/1AmSD-f0080nX0xZfYu32NSV5Ir1et1Dl/view?usp=sharing",
   pagination: {
-    postsPerPage: 10,
+    postsPerPage: 5,
     maxVisiblePages: 5,
   },
   deployment: {

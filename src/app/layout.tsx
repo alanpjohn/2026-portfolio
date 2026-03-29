@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { archivo, clashDisplay, nippo } from "@/lib/fonts";
+import { archivo, clashGrotesk, nippo } from "@/lib/fonts";
 import { ThemeProvider } from "@/lib/theme/provider";
 import { HighlightThemeProvider } from "@/components/ui/HighlightThemeProvider";
 import { Header } from "@/components/layout/Header";
@@ -22,7 +22,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${archivo.variable} ${clashDisplay.variable} ${nippo.variable}`}
+      className={`${archivo.variable} ${clashGrotesk.variable} ${nippo.variable}`}
     >
       <body suppressHydrationWarning>
         <ThemeProvider

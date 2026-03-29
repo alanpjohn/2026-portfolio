@@ -56,9 +56,9 @@ async function loadFonts() {
   const fontDir = join(process.cwd(), "public", "assets", "fonts");
 
   try {
-    // Load Clash Display Semibold OTF (for headings)
-    const clashDisplayFont = readFileSync(
-      join(fontDir, "ClashDisplay-Semibold.otf"),
+    // Load Clash Grotesk Semibold OTF (for headings)
+    const clashGroteskFont = readFileSync(
+      join(fontDir, "ClashGrotesk-Semibold.otf"),
     );
 
     // Load Archivo Regular OTF (for body text)
@@ -69,8 +69,8 @@ async function loadFonts() {
 
     return [
       {
-        name: "Clash Display",
-        data: clashDisplayFont,
+        name: "Clash Grotesk",
+        data: clashGroteskFont,
         weight: 600 as const, // Semibold
         style: "normal" as const,
       },
@@ -169,7 +169,7 @@ function OGCard({ title, description, tags, date }: OGCardProps) {
         {/* Title - Large Clash Display */}
         <h1
           style={{
-            fontFamily: "Clash Display",
+            fontFamily: "Clash Grotesk",
             fontSize: title.length > 40 ? "52px" : "60px",
             fontWeight: 600,
             lineHeight: 1.1,

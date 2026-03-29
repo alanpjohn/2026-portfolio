@@ -65,7 +65,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
       <div className="text-4xl mb-6 text-accent group-hover:text-foreground transition-colors">
         <FontAwesomeIcon icon={getWorkIcon(project.type)} />
       </div>
-      <h4 className="font-display font-bold text-xl mb-4 uppercase">{project.title}</h4>
+      <h4 className="font-display font-semibold normal-case text-xl mb-4">{project.title}</h4>
       <p className="mb-8 opacity-80 group-hover:opacity-100 flex-grow">{project.description}</p>
       <div className="flex flex-wrap gap-2 mb-6">
         {project.tags.slice(0, 3).map((tag) => (

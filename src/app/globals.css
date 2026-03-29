@@ -9,7 +9,7 @@
 
     /* Font families */
     --font-archivo: var(--font-archivo);
-    --font-clash-display: var(--font-clash-display);
+    --font-clash-grotesk: var(--font-clash-grotesk);
     --font-nippo: var(--font-nippo);
 
     /* Typography scale */
@@ -77,7 +77,7 @@
     h6,
     .font-heading {
         font-family: var(
-            --font-clash-display,
+            --font-clash-grotesk,
             var(--font-archivo),
             system-ui,
             sans-serif
@@ -95,7 +95,7 @@
     /* Display font - for large headings */
     .font-display {
         font-family: var(
-            --font-clash-display,
+            --font-clash-grotesk,
             var(--font-archivo),
             system-ui,
             sans-serif
@@ -444,42 +444,38 @@
             color-mix(in srgb, var(--foreground) 10%, transparent);
     }
 
-    /* Blog content heading sizes - brutalist uppercase style */
+    /* Blog content heading sizes - normal case, semibold weight */
     .prose h1 {
         font-size: 2.25rem;
-        font-weight: 800;
+        font-weight: 600;
         line-height: 1.1;
         margin-bottom: 1.5rem;
-        text-transform: uppercase;
         letter-spacing: -0.03em;
     }
 
     .prose h2 {
         font-size: 1.875rem;
-        font-weight: 800;
+        font-weight: 600;
         line-height: 1.2;
         margin-bottom: 1.25rem;
         margin-top: 2rem;
-        text-transform: uppercase;
         letter-spacing: -0.02em;
     }
 
     .prose h3 {
         font-size: 1.5rem;
-        font-weight: 700;
+        font-weight: 600;
         line-height: 1.3;
         margin-bottom: 1rem;
         margin-top: 1.5rem;
-        text-transform: uppercase;
         letter-spacing: -0.02em;
     }
 
     .prose h4 {
         font-size: 1.25rem;
-        font-weight: 700;
+        font-weight: 600;
         line-height: 1.4;
         margin-bottom: 0.875rem;
-        text-transform: uppercase;
         letter-spacing: -0.01em;
     }
 
@@ -488,7 +484,6 @@
         font-weight: 600;
         line-height: 1.4;
         margin-bottom: 0.75rem;
-        text-transform: uppercase;
     }
 
     .prose h6 {
@@ -496,7 +491,6 @@
         font-weight: 600;
         line-height: 1.5;
         margin-bottom: 0.625rem;
-        text-transform: uppercase;
     }
 
     /* Table styling */
